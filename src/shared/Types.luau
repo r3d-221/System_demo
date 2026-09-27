@@ -51,7 +51,7 @@ export type Item = {
 	stats: Stats?,
 }
 
-export type Hitbox = {
+export type HitboxConfig = {
 	type: HitboxType,
 	range: number?,
 	radius: number?,
@@ -68,7 +68,7 @@ export type WeaponInfo = {
 	abilities: { [string]: any },
 	description: string,
 	keywords: { string },
-	hitbox: Hitbox,
+	hitbox: HitboxConfig,
 	windUp: number,
 	active: number,
 	recovery: number,
