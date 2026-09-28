@@ -30,14 +30,25 @@ local playerData = {}
 local function defaultData(): PlayerData
 	local data: PlayerData = {
 		items = {
-			weapons = {},
+			weapons = {
+				{
+					id = "ironSword",
+					uid = "test",
+					stats = {
+						damage = { value = 10, rank = "D" },
+						critRate = { value = 1, rank = "D" },
+						critDamage = { value = 1.5, rank = "D" },
+						attackSpeed = { value = 0.1, rank = "D" },
+					},
+				},
+			},
 			armors = {},
 			materials = {},
 		},
 		baseStats = {},
 		changedStats = {},
 		equipped = {
-			weapons = nil,
+			weapons = "test",
 			armors = {
 				head = nil,
 				torso = nil,
@@ -60,6 +71,7 @@ local function setUpData(player: Player)
 
 	local data = defaultData()
 	playerData[player] = data
+	print(playerData[player])
 	SyncData:FireClient(player, data)
 end
 

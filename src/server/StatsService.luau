@@ -36,25 +36,12 @@ local StatsService = {}
 -- Helper functions
 -----------------------------------
 
-local function findEquippedItem(data: PlayerData, category: Cateogry, uid: string): Item?
-	local list = data.items[category] :: { Item }?
-	if not list then
-		return nil
-	end
-	for _, item in list do
-		if item.uid == uid then
-			return item
-		end
-	end
-	return nil
-end
-
 -- currently works for weapons only
 local function calculateEquippedItems(data: PlayerData): StatContribution
 	local contribution: StatContribution = {}
 	local weaponUid = data.equipped.weapons
 	if weaponUid then
-		local item = findEquippedItem(data, "weapons", weaponUid)
+		local item = StatsService.getEquippedItem(data, "weapons", weaponUid)
 		if item and item.stats then
 			for stat, roll in item.stats do
 				local statName: StatNames = stat :: StatNames
@@ -97,6 +84,21 @@ end
 -----------------------------------
 -- Public functions
 -----------------------------------
+
+function StatsService.getEquippedItem(data: PlayerData, category: Cateogry, uid: string?): Item?
+	local list = data.items[category] :: { Item }?
+	if not list then
+		return nil
+	end
+
+	-- linear look up
+	for _, item in list do
+		if item.uid == uid then
+			return item
+		end
+	end
+	return nil
+end
 
 function StatsService.recalculate(data: PlayerData)
 	data.baseStats = mergeFlat({ calculateEquippedItems(data) })

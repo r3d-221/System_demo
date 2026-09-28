@@ -80,7 +80,8 @@ export type Entity = {
 	model: Model,
 	humanoid: Humanoid,
 	rootPart: BasePart,
-	getStat: (self: Entity, stat: string) -> number,
+	getStat: (self: Entity, stat: StatNames) -> number,
+	stats: { [StatNames]: number },
 }
 
 export type Buff = {
@@ -105,8 +106,8 @@ export type PlayerData = {
 }
 
 export type DamageContext = {
-	attackerStats: { [string]: number },
-	targetStats: { [string]: number },
+	attackerStats: { [StatNames]: number },
+	targetStats: { [StatNames]: number },
 	damageMultiplier: number,
 }
 

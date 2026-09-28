@@ -17,6 +17,9 @@
         },
         "Getitem": {
           "$className": "RemoteEvent"
+        },
+        "Attack": {
+          "$className": "RemoteEvent"
         }
       }
     },

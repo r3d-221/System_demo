@@ -86,6 +86,7 @@ local ItemData: ItemsList = {
 		damage = "Damage",
 		critRate = "Crit rate",
 		critDamage = "Crit Damage",
+		attackSpeed = "Attack Speed",
 	},
 
 	statOrder = {

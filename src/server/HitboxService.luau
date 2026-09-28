@@ -198,7 +198,7 @@ function HitboxService.CheckHumanoids(self: Hitbox): { Humanoid }
 			return
 		end
 
-		local model = part:FindFirstAncestorWhichIsA("Model")
+		local model = part:FindFirstAncestorOfClass("Model")
 		local humanoid = model and model:FindFirstChildWhichIsA("Humanoid", true) :: Humanoid?
 		if humanoid and not seen[humanoid] and humanoid.Health > 0 then
 			seen[humanoid] = true
