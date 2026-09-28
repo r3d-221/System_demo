@@ -9,6 +9,7 @@ local Types = require(ReplicatedStorage.Shared.Types)
 -- Types
 type DamageContext = Types.DamageContext
 type DamageResult = Types.DamageResult
+type StatNames = Types.StatNames
 
 -- Constants
 local ARMOR_CONSTANT = 100
@@ -28,14 +29,14 @@ function DamageCalculationService.calculateHit(context: DamageContext): DamageRe
 	local attacker = context.attackerStats
 	local target = context.targetStats
 
-	local base = (attacker.damage or 0) * context.damageMultiplier
-	local critRate = attacker.critRate or 0
-	local critDamage = attacker.critDamage or 1
+	local base = (attacker["damage" :: StatNames] or 0) * context.damageMultiplier
+	local critRate = attacker["critRate" :: StatNames] or 0
+	local critDamage = attacker["critDamage" :: StatNames] or 1
 
 	local isCrit = math.random() < critRate
 	local rawDamage = if isCrit then base * critDamage else base
 
-	local armor = target.armor or 0
+	local armor = target["armor" :: StatNames] or 0
 	local mitigation = math.min(armor / (armor + ARMOR_CONSTANT), MAX_MITIGATION)
 
 	return {

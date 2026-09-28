@@ -33,7 +33,6 @@ function Inputs.onStart()
 		end
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			Attack:FireServer()
-			print("[Inputs]: event fired")
 		end
 	end)
 end

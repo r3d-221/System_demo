@@ -20,6 +20,15 @@
         },
         "Attack": {
           "$className": "RemoteEvent"
+        },
+        "EquipItem": {
+          "$className": "RemoteEvent"
+        },
+        "UnequipItem": {
+          "$className": "RemoteEvent"
+        },
+        "SellItem": {
+          "$className": "RemoteEvent"
         }
       }
     },

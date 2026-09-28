@@ -42,8 +42,8 @@ local ItemData: ItemsList = {
 			description = "A basic iron sword.",
 			keywords = { "iron", "melee", "sword", "blade", "common" },
 		},
-		crimsonBlade = {
-			name = "Crimson Blade",
+		blueHaze = {
+			name = "Blue Haze",
 			rarity = "mythic",
 			type = "melee",
 			tags = { "sword", "unique" },
@@ -55,7 +55,7 @@ local ItemData: ItemsList = {
 			passives = {},
 			abilities = {},
 			description = "A basic iron sword.",
-			keywords = { "crimson", "melee", "sword", "blade", "mythic" },
+			keywords = { "blue", "haze", "melee", "sword", "blade", "mythic" },
 		},
 	},
 

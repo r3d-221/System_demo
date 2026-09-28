@@ -23,6 +23,10 @@ type PlayerData = Types.PlayerData
 type WeaponInfo = Types.WeaponInfo
 type DamageContext = Types.DamageContext
 type Entity = Types.Entity
+type StatMap = Types.StatMap
+
+-- Constants
+local EMPTY_STATS: StatMap = {}
 
 -----------------------------------
 -- Module definition & state
@@ -42,12 +46,13 @@ local function getWeaponInfo(data: PlayerData): WeaponInfo?
 end
 
 local function createContext(entity: Entity, target: Humanoid): DamageContext
-	local targetPlayer = Players:GetPlayerFromCharacter(target.Parent)
+	local targetCharacter = target.Parent
+	local targetPlayer = targetCharacter and Players:GetPlayerFromCharacter(targetCharacter :: Model)
 	local targetData = targetPlayer and PlayerService.getData(targetPlayer)
 
 	return {
 		attackerStats = entity.stats,
-		targetStats = if targetData then targetData.changedStats else {},
+		targetStats = if targetData then targetData.changedStats else EMPTY_STATS,
 		damageMultiplier = 1,
 	}
 end
@@ -90,7 +95,6 @@ function CombatService.onStart()
 
 		local entity = playerEntity(character, humanoid, rootPart, data)
 		CombatService.basicAttack(entity, weaponInfo)
-		print("[CombatService]: event detected")
 	end)
 end
 
@@ -112,7 +116,7 @@ function CombatService.basicAttack(entity: Entity, weaponInfo: WeaponInfo)
 				local context = createContext(entity, target)
 				local result = DamageCalculationService.calculateHit(context)
 				target:TakeDamage(result.amount)
-				print("[CombatService]: " .. target.Name .. "took " .. result.amount .. " damage")
+				print("[CombatService] " .. target.Name .. "took " .. result.amount .. " damage")
 			end
 
 			hitbox:Destroy()

@@ -17,6 +17,7 @@ export type HitboxType = "arc" | "sphere" | "raycast" | "cylinder"
 export type StatNames = WeaponStatName | ArmorStatName
 export type WeaponStats = { [WeaponStatName]: Roll }
 export type ArmorStats = { [ArmorStatName]: Roll }
+export type StatMap = { [StatNames]: number }
 
 export type Stats = { [string]: Roll }
 
@@ -81,7 +82,7 @@ export type Entity = {
 	humanoid: Humanoid,
 	rootPart: BasePart,
 	getStat: (self: Entity, stat: StatNames) -> number,
-	stats: { [StatNames]: number },
+	stats: StatMap,
 }
 
 export type Buff = {
@@ -91,8 +92,8 @@ export type Buff = {
 
 export type PlayerData = {
 	items: { [Cateogry]: { any } },
-	baseStats: { [StatNames]: number },
-	changedStats: { [StatNames]: number },
+	baseStats: StatMap,
+	changedStats: StatMap,
 	equipped: {
 		weapons: string?,
 		armors: {
@@ -106,8 +107,8 @@ export type PlayerData = {
 }
 
 export type DamageContext = {
-	attackerStats: { [StatNames]: number },
-	targetStats: { [StatNames]: number },
+	attackerStats: StatMap,
+	targetStats: StatMap,
 	damageMultiplier: number,
 }
 

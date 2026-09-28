@@ -81,6 +81,15 @@ local function capitalize(text: string): string
 	return text:sub(1, 1):upper() .. text:sub(2)
 end
 
+-- only weapons can be uquipped right now
+local function isItemEquipped(item: Item): boolean
+	local data = PlayerManager.getData()
+	if not data or currentTab ~= "weapons" then
+		return false
+	end
+	return data.equipped.weapons == item.uid
+end
+
 -- sets the selected slot image for the currenlty inspected slot
 local function setSelectedSlot(newSlot: Frame?)
 	if currentSlotUI then
@@ -230,6 +239,13 @@ local function createInventorySlot(item: Item, parent: Instance?): Frame?
 		selectedFrame.Visible = false
 	end
 
+	local equippedHighlight = Instance.new("UIStroke")
+	equippedHighlight.Name = "EquippedHighlight"
+	equippedHighlight.Thickness = 2
+	equippedHighlight.Color = BRIGHT_COLOR
+	equippedHighlight.Enabled = isItemEquipped(item)
+	equippedHighlight.Parent = slot
+
 	local button = slot:FindFirstChild("button") :: TextButton?
 	if button then
 		button.MouseEnter:Connect(function()
@@ -256,6 +272,48 @@ local function createInventorySlot(item: Item, parent: Instance?): Frame?
 	end
 
 	return slot
+end
+
+-----------------------------------
+-- Item equipping
+-----------------------------------
+
+-- updates the equip, unequip, sell buttons
+local function updateInfoButtons()
+	local item = currentItem
+	local equipped = item ~= nil and isItemEquipped(item)
+	local supportsEquip = (currentTab == "weapons")
+
+	map.equip.Visible = supportsEquip and not equipped
+	map.unequip.Visible = supportsEquip and equipped
+	map.sell.Visible = (currentTab ~= "materials")
+end
+
+-- equips current item
+local function equipCurrentItem()
+	local item = currentItem
+	if not item then
+		return
+	end
+	PlayerManager.equipItem(currentTab, item.uid)
+end
+
+-- unequips current item
+local function unequipCurrentItem()
+	if currentTab ~= "weapons" then
+		return
+	end
+	PlayerManager.unequipItem(currentTab)
+end
+
+-- sells current item
+local function sellCurrentItem()
+	local item = currentItem
+	if not item or not item.uid then
+		return
+	end
+	PlayerManager.sellItem(currentTab, item.uid)
+	Inventory.closeInfo()
 end
 
 local function setUpButtons()
@@ -392,6 +450,48 @@ local function setUpButtons()
 			Inventory.refreshVisibility()
 		end)
 	end)
+
+	local equipButton = map.equip:FindFirstChild("button") :: TextButton?
+	if equipButton then
+		equipButton.MouseEnter:Connect(function()
+			AnimationManager.hover(map.equip, true)
+		end)
+		equipButton.MouseLeave:Connect(function()
+			AnimationManager.hover(map.equip, false)
+		end)
+		equipButton.MouseButton1Click:Connect(function()
+			AnimationManager.popOut(map.equip)
+			equipCurrentItem()
+		end)
+	end
+
+	local unequipButton = map.unequip:FindFirstChild("button") :: TextButton?
+	if unequipButton then
+		unequipButton.MouseEnter:Connect(function()
+			AnimationManager.hover(map.unequip, true)
+		end)
+		unequipButton.MouseLeave:Connect(function()
+			AnimationManager.hover(map.unequip, false)
+		end)
+		unequipButton.MouseButton1Click:Connect(function()
+			AnimationManager.popOut(map.unequip)
+			unequipCurrentItem()
+		end)
+	end
+
+	local sellButton = map.sell:FindFirstChild("button") :: TextButton?
+	if sellButton then
+		sellButton.MouseEnter:Connect(function()
+			AnimationManager.hover(map.sell, true)
+		end)
+		sellButton.MouseLeave:Connect(function()
+			AnimationManager.hover(map.sell, false)
+		end)
+		sellButton.MouseButton1Click:Connect(function()
+			AnimationManager.popOut(map.sell)
+			sellCurrentItem()
+		end)
+	end
 end
 
 -----------------------------------
@@ -537,61 +637,6 @@ local function copyFilterState(source: FilterState): FilterState
 	return copy
 end
 
--- opens the filter panel
-function Inventory.openFilterPanel()
-	if isFilterOpen then
-		return
-	end
-	isFilterOpen = true
-
-	syncPendingFromActive()
-
-	AnimationManager.windowOpen(map.filter_info, map.filter_info)
-	AnimationManager.windowOpen(map.filter_close, map.filter_close)
-end
-
--- closes the filter panel
-function Inventory.closeFilterPanel()
-	if not isFilterOpen then
-		return
-	end
-	isFilterOpen = false
-
-	AnimationManager.windowClose(map.filter_info, map.filter_info)
-	AnimationManager.windowClose(map.filter_close, map.filter_close)
-end
-
--- toggle for filter panel
-function Inventory.toggleFilterPanel()
-	if isFilterOpen then
-		Inventory.closeFilterPanel()
-	else
-		Inventory.openFilterPanel()
-	end
-end
-
--- applies the pending filters
-function Inventory.applyPendingFilters()
-	activeFilters = copyFilterState(pendingFilters)
-	Inventory.refreshVisibility()
-	Inventory.closeFilterPanel()
-end
-
--- resets the filter settings
-function Inventory.resetFilters()
-	pendingFilters = { rarity = {}, type = {}, tags = {} }
-	activeFilters = { rarity = {}, type = {}, tags = {} }
-
-	for _, category: FilterCategory in FILTER_CATEGORIES do
-		for value, filterSlot in pairs(filterSLots[category]) do
-			local accentColor = (category == "rarity") and ItemData.rarityColors[value] or nil
-			toggleFilterSlot(filterSlot, false, accentColor)
-		end
-	end
-
-	Inventory.refreshVisibility()
-end
-
 -----------------------------------
 -- Search
 -----------------------------------
@@ -712,6 +757,77 @@ end
 -----------------------------------
 -- Public functions
 -----------------------------------
+
+function Inventory.onStart()
+	setUpButtons()
+	updateFilterOptions()
+
+	dataConnection = PlayerManager.onChange(function(data)
+		if data and data.items then
+			Inventory.updateSlots(data.items)
+		end
+		if currentItem then
+			updateInfoButtons()
+		end
+	end)
+
+	Inventory.updateCurrentTab()
+end
+
+-- opens the filter panel
+function Inventory.openFilterPanel()
+	if isFilterOpen then
+		return
+	end
+	isFilterOpen = true
+
+	syncPendingFromActive()
+
+	AnimationManager.windowOpen(map.filter_info, map.filter_info)
+	AnimationManager.windowOpen(map.filter_close, map.filter_close)
+end
+
+-- closes the filter panel
+function Inventory.closeFilterPanel()
+	if not isFilterOpen then
+		return
+	end
+	isFilterOpen = false
+
+	AnimationManager.windowClose(map.filter_info, map.filter_info)
+	AnimationManager.windowClose(map.filter_close, map.filter_close)
+end
+
+-- toggle for filter panel
+function Inventory.toggleFilterPanel()
+	if isFilterOpen then
+		Inventory.closeFilterPanel()
+	else
+		Inventory.openFilterPanel()
+	end
+end
+
+-- applies the pending filters
+function Inventory.applyPendingFilters()
+	activeFilters = copyFilterState(pendingFilters)
+	Inventory.refreshVisibility()
+	Inventory.closeFilterPanel()
+end
+
+-- resets the filter settings
+function Inventory.resetFilters()
+	pendingFilters = { rarity = {}, type = {}, tags = {} }
+	activeFilters = { rarity = {}, type = {}, tags = {} }
+
+	for _, category: FilterCategory in FILTER_CATEGORIES do
+		for value, filterSlot in pairs(filterSLots[category]) do
+			local accentColor = (category == "rarity") and ItemData.rarityColors[value] or nil
+			toggleFilterSlot(filterSlot, false, accentColor)
+		end
+	end
+
+	Inventory.refreshVisibility()
+end
 
 -- sets the visibility of the inventory slots based on the filters
 function Inventory.refreshVisibility()
@@ -890,20 +1006,8 @@ function Inventory.updateInfo()
 	map.title.Visible = true
 	AnimationManager.typewrite(map.title.text, itemData.name, 0.03)
 
+	updateInfoButtons()
 	switchInfoTab(if hasStats then "stats" else "description")
-end
-
-function Inventory.onStart()
-	setUpButtons()
-	updateFilterOptions()
-
-	dataConnection = PlayerManager.onChange(function(data)
-		if data and data.items then
-			Inventory.updateSlots(data.items)
-		end
-	end)
-
-	Inventory.updateCurrentTab()
 end
 
 function Inventory.onDestroy()
