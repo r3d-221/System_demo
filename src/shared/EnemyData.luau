@@ -37,7 +37,16 @@ local EnemyData: EnemyData = {
 				critRate = 0.2,
 				critDamage = 1.1,
 			},
-			drops = {},
+			drops = {
+				scraps = {
+					amount = { min = 2, max = 5 },
+					chance = 0.6,
+				},
+				cloths = {
+					amount = { min = 1, max = 3 },
+					chance = 0.2,
+				},
+			},
 			attackRange = 10,
 			chaseRange = 25,
 			maxChaseRange = 40,

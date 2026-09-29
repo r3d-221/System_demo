@@ -103,15 +103,30 @@ function PlayerService.addItem(player: Player, item: Item, category: Category)
 	end
 
 	local categoryList = data.items[category]
-	if categoryList then
-		if category ~= "materials" then
-			table.insert(categoryList, item)
-			SyncData:FireClient(player, data)
-		end
-		-- the materials will stack
-	else
-		warn(string.format("[PlayerService] Attempted to add item to invalid category: '%s'", tostring(category)))
+	if not categoryList then
+		warn("[PlayerService] Attempted to add item to invalid category: " .. tostring(category))
+		return
 	end
+
+	if category == "materials" then
+		local existing
+		for _, existingItem in categoryList do
+			if existingItem.id == item.id then
+				existing = existingItem
+				break
+			end
+		end
+
+		if existing then
+			existing.amount = (existing.amount or 0) + (item.amount or 1)
+		else
+			table.insert(categoryList, item)
+		end
+	else
+		table.insert(categoryList, item)
+	end
+
+	SyncData:FireClient(player, data)
 end
 
 return PlayerService

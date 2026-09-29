@@ -38,7 +38,7 @@ local EnemySpawnService = {}
 -- Helper functions
 -----------------------------------
 
-local function spawn(spawnPoint: BasePart, id: string, config: EnemyInfo, onDead: () -> ())
+local function spawn(spawnPoint: BasePart, id: string, config: EnemyInfo, onDead: () -> ()): boolean
 	local template = enemyModels:FindFirstChild(id)
 	if not template or not template:IsA("Model") then
 		warn("[EnemySpawnService] No enemy model named " .. id .. " in ReplicatedStorage.enemies")
@@ -63,7 +63,6 @@ local function spawn(spawnPoint: BasePart, id: string, config: EnemyInfo, onDead
 		enemy.model:SetAttribute("weapon", weapon.id)
 	end
 
-	enemy.model:SetAttribute("id", enemy.id)
 	enemy.model:SetAttribute("damage", enemy.stats["damage" :: StatNames])
 	return true
 end

@@ -7,6 +7,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 -- Dependencies
 local CombatService = require(ServerScriptService.Server.CombatService)
+local DropService = require(ServerScriptService.Server.DropService)
 local Janitor = require(ReplicatedStorage.Packages.Janitor)
 
 local Shared = ReplicatedStorage.Shared
@@ -25,6 +26,7 @@ type EnemyStatNames = Types.EnemyStatNames
 type WeaponInfo = Types.WeaponInfo
 type Item = Types.Item
 type StatMap = Types.StatMap
+type DropEntry = Types.DropEntry
 
 type EnemyState = "idle" | "chase" | "attack" | "dead"
 type Properties = {
@@ -323,9 +325,12 @@ function EnemyService.dead(self: Enemy)
 end
 
 function EnemyService.drops(self: Enemy)
-	if not self.config.drops then
+	if not self.config.drops or not next(self.config.drops) then
 		return
 	end
+
+	local ownerUserId = self.model:GetAttribute("lastAttacker") :: number?
+	DropService.spawnDrops(self.rootPart.Position, self.config.drops, ownerUserId)
 end
 
 function EnemyService.destroy(self: Enemy)

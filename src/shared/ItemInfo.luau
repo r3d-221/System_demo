@@ -12,16 +12,13 @@ local CategoryList: { Category } = { "weapons", "armors", "materials" }
 local ItemInfo = {}
 
 function ItemInfo.getCategory(id: string): Category?
-	local category: Category? = nil
-	for _, v: Category in CategoryList do
-		for key, _ in ItemData[CategoryList] do
-			if key == id then
-				category = v
-				break
-			end
+	for _, category: Category in CategoryList do
+		local categoryData = ItemData[category]
+		if categoryData and categoryData[id] then
+			return category
 		end
 	end
-	return category
+	return nil
 end
 
 function ItemInfo.getInfo(category: Category, id: string): any?

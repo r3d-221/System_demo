@@ -83,6 +83,12 @@ export type WeaponInfo = {
 	tags: { ItemTags },
 }
 
+export type MaterialInfo = {
+	name: string,
+	rarity: RarityName,
+	description: string,
+}
+
 export type EnemyInfo = {
 	type: EnemyTypeStats,
 	subType: EnemySubTypeStats,
@@ -91,8 +97,11 @@ export type EnemyInfo = {
 	chaseRange: number,
 	maxChaseRange: number,
 	rest: number,
-	drops: {},
 	weapon: string?,
+	drops: { [string]: {
+		amount: { min: number, max: number },
+		chance: number,
+	} },
 }
 
 export type Entity = {
@@ -137,6 +146,8 @@ export type DamageResult = {
 
 export type RarityMap = { [RarityName]: number }
 export type WeaponDataMap = { [string]: WeaponInfo }
+export type MaterialDataMap = { [string]: MaterialInfo }
 export type EnemyDataMap = { [string]: EnemyInfo }
+export type DropEntry = { amount: { min: number, max: number }, chance: number }
 
 return Types

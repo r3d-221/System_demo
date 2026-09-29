@@ -8,11 +8,13 @@ local Types = require(ReplicatedStorage.Shared.Types)
 
 -- Types
 type WeaponData = Types.WeaponDataMap
+type MaterialData = Types.MaterialDataMap
 type Rarity = Types.RarityMap
 type RarityName = Types.RarityName
 
 type ItemsList = {
 	weapons: WeaponData,
+	materials: MaterialData,
 	rarity: Rarity,
 	itemFrames: { [RarityName]: string },
 	rarityColors: {},
@@ -59,10 +61,26 @@ local ItemData: ItemsList = {
 		},
 	},
 
+	materials = {
+		scraps = {
+			name = "Scraps",
+			rarity = "common",
+			description = "Used as a basic material in crafting various weapons",
+		},
+		cloths = {
+			name = "Scraps",
+			rarity = "rare",
+			description = "It's clothings and stuff",
+		},
+	},
+
 	rarity = {
 		common = 0.6,
-		rare = 0.2,
+		rare = 0.25,
+		epic = 0.109,
+		legendary = 0.03,
 		mythic = 0.01,
+		secret = 0.001,
 	},
 
 	rarityColors = {

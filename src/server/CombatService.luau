@@ -121,6 +121,10 @@ function CombatService.basicAttack(entity: Entity, weaponInfo: WeaponInfo)
 					and targetModel
 					and CollectionService:HasTag(targetModel, ENEMY_TAG)
 				then
+					local attacker = Players:GetPlayerFromCharacter(entity.model)
+					if attacker and targetModel then
+						targetModel:SetAttribute("lastAttacker", attacker.UserId)
+					end
 					continue
 				end
 				local context = createContext(entity, target)
@@ -129,7 +133,9 @@ function CombatService.basicAttack(entity: Entity, weaponInfo: WeaponInfo)
 				print("[CombatService] " .. target.Name .. " took " .. result.amount .. " damage")
 			end
 
-			hitbox:Destroy()
+			task.delay(weaponInfo.active, function()
+				hitbox:Destroy()
+			end)
 		end
 
 		task.wait(weaponInfo.active + weaponInfo.recovery)
