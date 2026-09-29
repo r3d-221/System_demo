@@ -17,12 +17,12 @@ local UnequipItem = Remotes.UnequipItem
 local SellItem = Remotes.SellItem
 
 -- Types
-type Cateogry = Types.Cateogry
+type Category = Types.Category
 type PlayerData = Types.PlayerData
 
 -- Constants
-local EQUIPPABLE_CATEGORIES: { [Cateogry]: boolean } = { weapons = true } -- add armors
-local SELLABLE_CATEGORIES: { [Cateogry]: boolean } = { weapons = true, armors = true }
+local EQUIPPABLE_CATEGORIES: { [Category]: boolean } = { weapons = true } -- add armors
+local SELLABLE_CATEGORIES: { [Category]: boolean } = { weapons = true, armors = true }
 
 -----------------------------------
 -- Module definition & state
@@ -34,7 +34,7 @@ local InventoryService = {}
 -- Helper functions
 -----------------------------------
 
-local function findItemIndex(data: PlayerData, category: Cateogry, uid: string): number?
+local function findItemIndex(data: PlayerData, category: Category, uid: string): number?
 	local list = data.items[category]
 	if not list then
 		return nil
@@ -52,7 +52,7 @@ end
 -----------------------------------
 
 function InventoryService.onStart()
-	EquipItem.OnServerEvent:Connect(function(player: Player, category: Cateogry, uid: string)
+	EquipItem.OnServerEvent:Connect(function(player: Player, category: Category, uid: string)
 		if not EQUIPPABLE_CATEGORIES[category] then
 			warn("[InventoryService] Equipping" .. tostring(category) .. " isn't supported yet")
 			return
@@ -69,7 +69,8 @@ function InventoryService.onStart()
 			return
 		end
 
-		local didEquip = EquipmentService.equipWeapon(player, item.id)
+		local character = player.Character :: Model
+		local didEquip = EquipmentService.equipWeapon(character, item.id)
 		if not didEquip then
 			return
 		end
@@ -79,7 +80,7 @@ function InventoryService.onStart()
 		PlayerService.sync(player)
 	end)
 
-	UnequipItem.OnServerEvent:Connect(function(player: Player, category: Cateogry)
+	UnequipItem.OnServerEvent:Connect(function(player: Player, category: Category)
 		if not EQUIPPABLE_CATEGORIES[category] then
 			return
 		end
@@ -95,7 +96,7 @@ function InventoryService.onStart()
 		PlayerService.sync(player)
 	end)
 
-	SellItem.OnServerEvent:Connect(function(player: Player, category: Cateogry, uid: string)
+	SellItem.OnServerEvent:Connect(function(player: Player, category: Category, uid: string)
 		if not SELLABLE_CATEGORIES[category] then
 			warn("[InventoryService] Selling " .. tostring(category) .. " isn't supported yet")
 			return

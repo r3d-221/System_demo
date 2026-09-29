@@ -4,7 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- Dependencies
-local weaponTemplates = ReplicatedStorage:WaitForChild("weaponTemplates")
+local weapons = ReplicatedStorage.weapons
 
 -- Types
 
@@ -44,23 +44,18 @@ end
 -- Public functions
 -----------------------------------
 
-function EquipmentService.equipWeapon(player: Player, weaponModelId: string): boolean
-	local character = player.Character
-	if not character then
-		return false
-	end
-
-	local rightArm = character:FindFirstChild(GRIP_LIMB_NAME) :: BasePart?
+function EquipmentService.equipWeapon(model: Model, id: string): boolean
+	local rightArm = model:FindFirstChild(GRIP_LIMB_NAME) :: BasePart?
 	if not rightArm then
-		warn("[EquipmentService] No " .. GRIP_LIMB_NAME .. " on " .. player.Name)
+		warn("[EquipmentService] No " .. GRIP_LIMB_NAME .. " on " .. model.Name)
 		return false
 	end
 
-	unequip(character)
+	unequip(model)
 
-	local template = weaponTemplates:FindFirstChild(weaponModelId)
+	local template = weapons:FindFirstChild(id)
 	if not template then
-		warn("[EquipmentService] No weapon model for: " .. weaponModelId)
+		warn("[EquipmentService] No weapon model for: " .. id)
 		return false
 	end
 
@@ -69,7 +64,7 @@ function EquipmentService.equipWeapon(player: Player, weaponModelId: string): bo
 
 	local handle = weaponModel:FindFirstChild("Handle") :: BasePart?
 	if not handle then
-		warn("[EquipmentService] '" .. weaponModelId .. "' has no Handle part")
+		warn("[EquipmentService] '" .. id .. "' has no Handle part")
 		weaponModel:Destroy()
 		return false
 	end
@@ -82,7 +77,7 @@ function EquipmentService.equipWeapon(player: Player, weaponModelId: string): bo
 	grip.C1 = (handle:GetAttribute("GripC1") :: CFrame?) or CFrame.new()
 	grip.Parent = rightArm
 
-	weaponModel.Parent = character
+	weaponModel.Parent = model
 	return true
 end
 

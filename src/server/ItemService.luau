@@ -8,17 +8,17 @@ local HttpService = game:GetService("HttpService")
 
 -- Dependencies
 local Server = ServerScriptService:WaitForChild("Server")
+local ItemInfo = require(ReplicatedStorage.Shared.ItemInfo)
 local PlayerService = require(Server.PlayerService)
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
-local ItemData = require(Shared.ItemData)
 local Types = require(Shared.Types)
 local Util = require(Shared.Util)
 
 -- Types
 type Stats = Types.Stats
 type Item = Types.Item
-type Cateogry = Types.Cateogry
+type Category = Types.Category
 
 -- Constants
 local GENERATOR_TAG = "Generator"
@@ -66,20 +66,18 @@ local function rollStats(stats: Stats)
 	end
 end
 
-local function createItem(id: string, category: string, amount: number?): Item?
-	local categoryData = ItemData[category]
-	local itemData = categoryData and categoryData[id]
+-----------------------------------
+-- Public functions
+-----------------------------------
 
+function ItemService.createItem(id: string, category: Category, amount: number?): Item?
+	local itemData = ItemInfo.getInfo(category, id)
 	if not itemData then
-		warn(string.format("[ItemService] Invalid item ID '%s' for category '%s'", id, category))
 		return nil
 	end
 
 	if category == "materials" then
-		return {
-			id = id,
-			amount = amount or 1,
-		}
+		return { id = id, amount = amount or 1 }
 	end
 
 	local item: Item = {
@@ -97,12 +95,8 @@ local function createItem(id: string, category: string, amount: number?): Item?
 	return item
 end
 
------------------------------------
--- Public functions
------------------------------------
-
-function ItemService.giveItem(player: Player, id: string, category: Cateogry, amount: number?)
-	local item = createItem(id, category, amount)
+function ItemService.giveItem(player: Player, id: string, category: Category, amount: number?)
+	local item = ItemService.createItem(id, category, amount)
 	if item then
 		PlayerService.addItem(player, item, category)
 	end
@@ -118,7 +112,7 @@ function ItemService.onStart()
 		if prompt and id and category then
 			prompt.Triggered:Connect(function(player: Player)
 				if category.Value ~= "materials" then
-					ItemService.giveItem(player, id.Value, category.Value :: Cateogry)
+					ItemService.giveItem(player, id.Value, category.Value :: Category)
 					print(string.format("[ItemService] %s obtained %s", player.Name, id.Value))
 				end
 			end)

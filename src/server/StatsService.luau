@@ -9,7 +9,7 @@ local Types = require(ReplicatedStorage.Shared.Types)
 -- Types
 type StatNames = Types.StatNames
 type PlayerData = Types.PlayerData
-type Cateogry = Types.Cateogry
+type Category = Types.Category
 type Item = Types.Item
 type StatContribution = { [StatNames]: number }
 
@@ -85,7 +85,7 @@ end
 -- Public functions
 -----------------------------------
 
-function StatsService.getEquippedItem(data: PlayerData, category: Cateogry, uid: string?): Item?
+function StatsService.getEquippedItem(data: PlayerData, category: Category, uid: string?): Item?
 	local list = data.items[category] :: { Item }?
 	if not list then
 		return nil

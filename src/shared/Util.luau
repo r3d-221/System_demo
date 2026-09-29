@@ -43,6 +43,18 @@ function Util.weightedRandom(weightPool: { [any]: number }): any
 	return nil
 end
 
+-- checks if there is a humanoid in a character
+function Util.checkHumanoid(character: Model?): (Humanoid?, BasePart?)
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local rootPart = character and character:FindFirstChild("HumanoidRootPart") :: BasePart
+
+	if not humanoid or not rootPart or humanoid.Health <= 0 then
+		return nil, nil
+	end
+
+	return humanoid, rootPart
+end
+
 -- ui mapper
 function Util.mapUI(rootElement)
 	local map = {}

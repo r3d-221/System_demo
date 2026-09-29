@@ -6,18 +6,24 @@ export type Roll = {
 	rank: string,
 }
 
-export type Cateogry = "weapons" | "armors" | "materials"
+export type Category = "weapons" | "armors" | "materials"
 export type WeaponStatName = "damage" | "critRate" | "critDamage" | "luck" | "attackSpeed" | "cooldownReduction"
 export type ArmorStatName = "armor" | "health" | "luck" | "speed"
 export type RarityName = "common" | "rare" | "epic" | "legendary" | "mythic" | "secret"
 export type ItemTags = "sword" | "spear" | "axe" | "greatSword" | "bow" | "crossBow" | "mechanicalBow" | "unique"
 export type ItemTypes = "melee" | "range"
 export type HitboxType = "arc" | "sphere" | "raycast" | "cylinder"
+export type EnemyType = "melee" | "range" | "boss"
+export type EnemySubType = "fast" | "tank" | "armor" | "miniBoss" | "none"
+export type EnemyStatNames = "health" | "damage" | "armor" | "speed" | "critRate" | "critDamage"
 
 export type StatNames = WeaponStatName | ArmorStatName
 export type WeaponStats = { [WeaponStatName]: Roll }
 export type ArmorStats = { [ArmorStatName]: Roll }
 export type StatMap = { [StatNames]: number }
+export type EnemyTypeStats = { [EnemyType]: number }
+export type EnemySubTypeStats = { [EnemySubType]: number }
+export type EnemyStats = { [EnemyStatNames]: number }
 
 export type Stats = { [string]: Roll }
 
@@ -77,6 +83,18 @@ export type WeaponInfo = {
 	tags: { ItemTags },
 }
 
+export type EnemyInfo = {
+	type: EnemyTypeStats,
+	subType: EnemySubTypeStats,
+	stats: EnemyStats,
+	attackRange: number,
+	chaseRange: number,
+	maxChaseRange: number,
+	rest: number,
+	drops: {},
+	weapon: string?,
+}
+
 export type Entity = {
 	model: Model,
 	humanoid: Humanoid,
@@ -91,7 +109,7 @@ export type Buff = {
 }
 
 export type PlayerData = {
-	items: { [Cateogry]: { any } },
+	items: { [Category]: { any } },
 	baseStats: StatMap,
 	changedStats: StatMap,
 	equipped: {
@@ -119,5 +137,6 @@ export type DamageResult = {
 
 export type RarityMap = { [RarityName]: number }
 export type WeaponDataMap = { [string]: WeaponInfo }
+export type EnemyDataMap = { [string]: EnemyInfo }
 
 return Types

@@ -1,6 +1,7 @@
 --!strict
 
 -- Services
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -16,6 +17,7 @@ local StatsService = require(ServerScriptService.Server.StatsService)
 
 local Remotes = ReplicatedStorage.Remotes
 local Types = require(ReplicatedStorage.Shared.Types)
+local Util = require(ReplicatedStorage.Shared.Util)
 local Attack = Remotes.Attack
 
 -- Types
@@ -27,6 +29,7 @@ type StatMap = Types.StatMap
 
 -- Constants
 local EMPTY_STATS: StatMap = {}
+local ENEMY_TAG = "Enemy"
 
 -----------------------------------
 -- Module definition & state
@@ -76,8 +79,7 @@ end
 function CombatService.onStart()
 	Attack.OnServerEvent:Connect(function(player: Player)
 		local character = player.Character
-		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		local rootPart = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+		local humanoid, rootPart = Util.checkHumanoid(character)
 
 		if not (character and humanoid and rootPart) or humanoid.Health <= 0 then
 			return
@@ -113,10 +115,18 @@ function CombatService.basicAttack(entity: Entity, weaponInfo: WeaponInfo)
 				HitboxService.new(weaponInfo.hitbox, entity.rootPart.CFrame, { entity.model }, RunService:IsStudio())
 
 			for _, target in hitbox:CheckHumanoids() do
+				local targetModel = target.Parent
+				if
+					CollectionService:HasTag(entity.model, ENEMY_TAG)
+					and targetModel
+					and CollectionService:HasTag(targetModel, ENEMY_TAG)
+				then
+					continue
+				end
 				local context = createContext(entity, target)
 				local result = DamageCalculationService.calculateHit(context)
 				target:TakeDamage(result.amount)
-				print("[CombatService] " .. target.Name .. "took " .. result.amount .. " damage")
+				print("[CombatService] " .. target.Name .. " took " .. result.amount .. " damage")
 			end
 
 			hitbox:Destroy()

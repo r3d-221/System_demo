@@ -15,7 +15,7 @@ local Types = require(ReplicatedStorage.Shared.Types)
 -- Types
 type Item = Types.Item
 type PlayerData = Types.PlayerData
-type Cateogry = Types.Cateogry
+type Category = Types.Category
 
 -----------------------------------
 -- Module definition & state
@@ -96,7 +96,7 @@ function PlayerService.sync(player: Player)
 	end
 end
 
-function PlayerService.addItem(player: Player, item: Item, category: Cateogry)
+function PlayerService.addItem(player: Player, item: Item, category: Category)
 	local data = PlayerService.getData(player)
 	if not data then
 		return
