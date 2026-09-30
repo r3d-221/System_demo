@@ -128,6 +128,10 @@ local function switchInfoTab(tabName: InfoTab)
 	if tabName == "stats" then
 		Inventory.updateStats()
 	end
+
+	if tabName == "description" then
+		Inventory.updateDescription()
+	end
 end
 
 -- changes the category tabs
@@ -245,6 +249,20 @@ local function createInventorySlot(item: Item, parent: Instance?): Frame?
 	equippedHighlight.Color = BRIGHT_COLOR
 	equippedHighlight.Enabled = isItemEquipped(item)
 	equippedHighlight.Parent = slot
+
+	local image = slot:FindFirstChild("image") :: ImageLabel?
+	if itemData.image and image then
+		image.Image = itemData.image
+	end
+
+	local amount = slot:FindFirstChild("amount") :: Frame?
+	if amount and currentTab == "materials" then
+		local text = amount:FindFirstChild("text") :: TextLabel?
+		if text then
+			amount.Visible = true
+			AnimationManager.typewrite(text, tostring(item.amount) .. "x", 0.03)
+		end
+	end
 
 	local button = slot:FindFirstChild("button") :: TextButton?
 	if button then
@@ -956,6 +974,26 @@ function Inventory.updateStats()
 
 			createStat(ItemData.statNames[name], stat.rank, displayValue, index)
 		end
+	end
+end
+
+function Inventory.updateDescription()
+	local item = currentItem
+	if not item then
+		return
+	end
+
+	local itemData = ItemData[currentTab][item.id]
+	if not itemData then
+		return
+	end
+
+	local fill = "A description about something."
+
+	if itemData.description then
+		map.description_info.text.Text = itemData.description
+	else
+		map.description_info.text = fill
 	end
 end
 

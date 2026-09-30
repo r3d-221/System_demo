@@ -1,6 +1,7 @@
 --!strict
 
 -- Services
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
@@ -47,11 +48,43 @@ local function findItemIndex(data: PlayerData, category: Category, uid: string):
 	return nil
 end
 
+local function equipSavedWeapon(player: Player, character: Model)
+	local data = PlayerService.getData(player)
+	if not data or not data.equipped.weapons then
+		return
+	end
+
+	local item = StatsService.getEquippedItem(data, "weapons", data.equipped.weapons)
+	if not item then
+		data.equipped.weapons = nil
+		StatsService.recalculate(data)
+		PlayerService.sync(player)
+		return
+	end
+
+	EquipmentService.equipWeapon(character, item.id)
+end
+
+local function onPlayerAdded(player: Player)
+	player.CharacterAdded:Connect(function(character)
+		equipSavedWeapon(player, character)
+	end)
+	if player.Character then
+		task.spawn(equipSavedWeapon, player, player.Character)
+	end
+end
+
 -----------------------------------
 -- Public functions
 -----------------------------------
 
 function InventoryService.onStart()
+	for _, player in Players:GetPlayers() do
+		onPlayerAdded(player)
+	end
+
+	Players.PlayerAdded:Connect(onPlayerAdded)
+
 	EquipItem.OnServerEvent:Connect(function(player: Player, category: Category, uid: string)
 		if not EQUIPPABLE_CATEGORIES[category] then
 			warn("[InventoryService] Equipping" .. tostring(category) .. " isn't supported yet")

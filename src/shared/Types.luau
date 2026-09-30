@@ -81,6 +81,7 @@ export type WeaponInfo = {
 	recovery: number,
 	type: ItemTypes,
 	tags: { ItemTags },
+	image: string?,
 }
 
 export type MaterialInfo = {
