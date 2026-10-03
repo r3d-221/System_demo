@@ -12,7 +12,7 @@ local PlayerScripts = player:WaitForChild("PlayerScripts")
 local Client = PlayerScripts:WaitForChild("Client")
 local PlayerManager = require(Client.PlayerManager)
 local UIManager = require(Client.UIManager)
-local UIAnimationManager = require(Client.UIAnimationManager)
+local UIAnimations = require(Client.UIAnimations)
 
 local Shared = ReplicatedStorage:FindFirstChild("Shared")
 local ItemData = require(Shared.ItemData)
@@ -105,7 +105,7 @@ local function setSelectedSlot(newSlot: Frame?)
 		local new = currentSlotUI:FindFirstChild("selected") :: ImageLabel?
 		if new then
 			new.Visible = true
-			UIAnimationManager.popOut(new)
+			UIAnimations.popOut(new)
 		end
 	end
 end
@@ -208,13 +208,13 @@ local function createStat(name: string, rank: string, text: string, delayIndex: 
 	task.delay(delayIndex * 0.08, function()
 		if statFrame.Parent then
 			if statName then
-				UIAnimationManager.typewrite(statName, name .. ":", 0.02)
+				UIAnimations.typewrite(statName, name .. ":", 0.02)
 			end
 			if statRank then
-				UIAnimationManager.typewrite(statRank, rank, 0.02)
+				UIAnimations.typewrite(statRank, rank, 0.02)
 			end
 			if statAmount then
-				UIAnimationManager.typewrite(statAmount, text, 0.02)
+				UIAnimations.typewrite(statAmount, text, 0.02)
 			end
 		end
 	end)
@@ -260,21 +260,21 @@ local function createInventorySlot(item: Item, parent: Instance?): Frame?
 		local text = amount:FindFirstChild("text") :: TextLabel?
 		if text then
 			amount.Visible = true
-			UIAnimationManager.typewrite(text, tostring(item.amount) .. "x", 0.03)
+			UIAnimations.typewrite(text, tostring(item.amount) .. "x", 0.03)
 		end
 	end
 
 	local button = slot:FindFirstChild("button") :: TextButton?
 	if button then
 		button.MouseEnter:Connect(function()
-			UIAnimationManager.hover(slot, true)
+			UIAnimations.hover(slot, true)
 		end)
 		button.MouseLeave:Connect(function()
-			UIAnimationManager.hover(slot, false)
+			UIAnimations.hover(slot, false)
 		end)
 
 		button.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(slot)
+			UIAnimations.popOut(slot)
 			setSelectedSlot(slot)
 			currentItem = item
 			Inventory.updateInfo()
@@ -338,15 +338,15 @@ local function setUpButtons()
 	local closeButton = map.close:FindFirstChild("button") :: TextButton
 
 	closeButton.MouseEnter:Connect(function()
-		UIAnimationManager.hover(map.close, true)
+		UIAnimations.hover(map.close, true)
 	end)
 	closeButton.MouseLeave:Connect(function()
-		UIAnimationManager.hover(map.close, false)
+		UIAnimations.hover(map.close, false)
 	end)
 	closeButton.MouseButton1Click:Connect(function()
-		UIAnimationManager.popOut(map.close)
+		UIAnimations.popOut(map.close)
 
-		UIAnimationManager.windowClose(inventory, canvas)
+		UIAnimations.windowClose(inventory, canvas)
 
 		if isFilterOpen then
 			isFilterOpen = false
@@ -367,13 +367,13 @@ local function setUpButtons()
 		if tab and tab:FindFirstChild("button") then
 			local button = tab.button
 			button.MouseEnter:Connect(function()
-				UIAnimationManager.hover(tab, true)
+				UIAnimations.hover(tab, true)
 			end)
 			button.MouseLeave:Connect(function()
-				UIAnimationManager.hover(tab, false)
+				UIAnimations.hover(tab, false)
 			end)
 			button.MouseButton1Click:Connect(function()
-				UIAnimationManager.popOut(tab)
+				UIAnimations.popOut(tab)
 				switchTab(name :: Tab)
 			end)
 		end
@@ -384,16 +384,16 @@ local function setUpButtons()
 		if info and info:FindFirstChild("button") then
 			local button = info.button
 			button.MouseEnter:Connect(function()
-				UIAnimationManager.hover(info, true)
+				UIAnimations.hover(info, true)
 			end)
 			button.MouseLeave:Connect(function()
-				UIAnimationManager.hover(info, false)
+				UIAnimations.hover(info, false)
 			end)
 			button.MouseButton1Click:Connect(function()
 				if name ~= "description" and currentTab == "materials" then
 					return
 				end
-				UIAnimationManager.popOut(info)
+				UIAnimations.popOut(info)
 				switchInfoTab(name :: InfoTab)
 			end)
 		end
@@ -402,13 +402,13 @@ local function setUpButtons()
 	local filterButton = map.filter:FindFirstChild("button") :: TextButton?
 	if filterButton then
 		filterButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.filter, true)
+			UIAnimations.hover(map.filter, true)
 		end)
 		filterButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.filter, false)
+			UIAnimations.hover(map.filter, false)
 		end)
 		filterButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.filter)
+			UIAnimations.popOut(map.filter)
 			Inventory.toggleFilterPanel()
 		end)
 	end
@@ -416,13 +416,13 @@ local function setUpButtons()
 	local filterCloseButton = map.filter_close:FindFirstChild("button") :: TextButton?
 	if filterCloseButton then
 		filterCloseButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.filter_close, true)
+			UIAnimations.hover(map.filter_close, true)
 		end)
 		filterCloseButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.filter_close, false)
+			UIAnimations.hover(map.filter_close, false)
 		end)
 		filterCloseButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.filter_close)
+			UIAnimations.popOut(map.filter_close)
 			Inventory.closeFilterPanel()
 		end)
 	end
@@ -430,13 +430,13 @@ local function setUpButtons()
 	local applyButton = map.filter_apply:FindFirstChild("button") :: TextButton?
 	if applyButton then
 		applyButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.filter_apply, true)
+			UIAnimations.hover(map.filter_apply, true)
 		end)
 		applyButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.filter_apply, false)
+			UIAnimations.hover(map.filter_apply, false)
 		end)
 		applyButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.filter_apply)
+			UIAnimations.popOut(map.filter_apply)
 			Inventory.applyPendingFilters()
 		end)
 	end
@@ -444,13 +444,13 @@ local function setUpButtons()
 	local resetButton = map.filter_reset:FindFirstChild("button") :: TextButton?
 	if resetButton then
 		resetButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.filter_reset, true)
+			UIAnimations.hover(map.filter_reset, true)
 		end)
 		resetButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.filter_reset, false)
+			UIAnimations.hover(map.filter_reset, false)
 		end)
 		resetButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.filter_reset)
+			UIAnimations.popOut(map.filter_reset)
 			Inventory.resetFilters()
 		end)
 	end
@@ -472,13 +472,13 @@ local function setUpButtons()
 	local equipButton = map.equip:FindFirstChild("button") :: TextButton?
 	if equipButton then
 		equipButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.equip, true)
+			UIAnimations.hover(map.equip, true)
 		end)
 		equipButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.equip, false)
+			UIAnimations.hover(map.equip, false)
 		end)
 		equipButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.equip)
+			UIAnimations.popOut(map.equip)
 			equipCurrentItem()
 		end)
 	end
@@ -486,13 +486,13 @@ local function setUpButtons()
 	local unequipButton = map.unequip:FindFirstChild("button") :: TextButton?
 	if unequipButton then
 		unequipButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.unequip, true)
+			UIAnimations.hover(map.unequip, true)
 		end)
 		unequipButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.unequip, false)
+			UIAnimations.hover(map.unequip, false)
 		end)
 		unequipButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.unequip)
+			UIAnimations.popOut(map.unequip)
 			unequipCurrentItem()
 		end)
 	end
@@ -500,13 +500,13 @@ local function setUpButtons()
 	local sellButton = map.sell:FindFirstChild("button") :: TextButton?
 	if sellButton then
 		sellButton.MouseEnter:Connect(function()
-			UIAnimationManager.hover(map.sell, true)
+			UIAnimations.hover(map.sell, true)
 		end)
 		sellButton.MouseLeave:Connect(function()
-			UIAnimationManager.hover(map.sell, false)
+			UIAnimations.hover(map.sell, false)
 		end)
 		sellButton.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(map.sell)
+			UIAnimations.popOut(map.sell)
 			sellCurrentItem()
 		end)
 	end
@@ -581,13 +581,13 @@ local function createFilterSlot(category: FilterCategory, value: string, name: s
 	local button = filterSlot:FindFirstChild("button") :: TextButton?
 	if button then
 		button.MouseEnter:Connect(function()
-			UIAnimationManager.hover(filterSlot, true)
+			UIAnimations.hover(filterSlot, true)
 		end)
 		button.MouseLeave:Connect(function()
-			UIAnimationManager.hover(filterSlot, false)
+			UIAnimations.hover(filterSlot, false)
 		end)
 		button.MouseButton1Click:Connect(function()
-			UIAnimationManager.popOut(filterSlot)
+			UIAnimations.popOut(filterSlot)
 
 			local isSelected = not pendingFilters[category][value]
 			pendingFilters[category][value] = isSelected or nil
@@ -801,8 +801,8 @@ function Inventory.openFilterPanel()
 
 	syncPendingFromActive()
 
-	UIAnimationManager.windowOpen(map.filter_info, map.filter_info)
-	UIAnimationManager.windowOpen(map.filter_close, map.filter_close)
+	UIAnimations.windowOpen(map.filter_info, map.filter_info)
+	UIAnimations.windowOpen(map.filter_close, map.filter_close)
 end
 
 -- closes the filter panel
@@ -812,8 +812,8 @@ function Inventory.closeFilterPanel()
 	end
 	isFilterOpen = false
 
-	UIAnimationManager.windowClose(map.filter_info, map.filter_info)
-	UIAnimationManager.windowClose(map.filter_close, map.filter_close)
+	UIAnimations.windowClose(map.filter_info, map.filter_info)
+	UIAnimations.windowClose(map.filter_close, map.filter_close)
 end
 
 -- toggle for filter panel
@@ -862,7 +862,7 @@ function Inventory.clearSlots()
 	setSelectedSlot(nil)
 	for _, child in map.list:GetChildren() do
 		if child:IsA("Frame") then
-			UIAnimationManager.cancel(child)
+			UIAnimations.cancel(child)
 			child:Destroy()
 		end
 	end
@@ -880,7 +880,7 @@ end
 -- toggle for info panel
 function Inventory.toggleInfo(isVisible: boolean)
 	if map.info:IsA("CanvasGroup") then
-		UIAnimationManager.fade(map.info, isVisible)
+		UIAnimations.fade(map.info, isVisible)
 	else
 		for _, child in map.info:GetChildren() do
 			child.Visible = isVisible
@@ -919,7 +919,7 @@ function Inventory.playSectionFades()
 		end
 	end
 
-	UIAnimationManager.staggerSectionsIn(sectionsToFade)
+	UIAnimations.staggerSectionsIn(sectionsToFade)
 end
 
 -- updates the inventory slots
@@ -936,7 +936,7 @@ function Inventory.updateSlots(items)
 		local slot = createInventorySlot(item)
 		if slot then
 			index += 1
-			UIAnimationManager.staggerPopIn(slot, index)
+			UIAnimations.staggerPopIn(slot, index)
 		end
 	end
 
@@ -1023,11 +1023,11 @@ function Inventory.updateInfo()
 			selected:Destroy()
 		end
 
-		UIAnimationManager.popOut(slot)
+		UIAnimations.popOut(slot)
 	end
 
 	if map.item:IsA("CanvasGroup") then
-		UIAnimationManager.fade(map.item, true)
+		UIAnimations.fade(map.item, true)
 	else
 		map.item.Visible = true
 	end
@@ -1042,7 +1042,7 @@ function Inventory.updateInfo()
 	map.description.Visible = true
 
 	map.title.Visible = true
-	UIAnimationManager.typewrite(map.title.text, itemData.name, 0.03)
+	UIAnimations.typewrite(map.title.text, itemData.name, 0.03)
 
 	updateInfoButtons()
 	switchInfoTab(if hasStats then "stats" else "description")

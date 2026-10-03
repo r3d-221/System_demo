@@ -20,7 +20,7 @@ local INDICATOR = "damage_indicator"
 -- Module definition & state
 -----------------------------------
 
-local DamageIndicationManager = {}
+local DamageIndication = {}
 local active: { [BillboardGui]: number } = setmetatable({}, { __mode = "k" }) :: any
 
 -----------------------------------
@@ -80,7 +80,7 @@ end
 -- Public functions
 -----------------------------------
 
-function DamageIndicationManager.onStart()
+function DamageIndication.onStart()
 	DamageDealt.OnClientEvent:Connect(function(humanoid: Humanoid?, amount: number, isCrit: boolean)
 		if humanoid then
 			show(humanoid, amount, isCrit)
@@ -88,4 +88,4 @@ function DamageIndicationManager.onStart()
 	end)
 end
 
-return DamageIndicationManager
+return DamageIndication

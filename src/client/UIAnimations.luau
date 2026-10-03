@@ -18,7 +18,7 @@ local STYLE = {
 -----------------------------------
 -- Module definition & state
 -----------------------------------
-local AnimationManager = {}
+local UIAnimations = {}
 local active = {}
 
 -----------------------------------
@@ -59,30 +59,30 @@ end
 -- Public functions
 -----------------------------------
 
-function AnimationManager.hover(element: GuiObject, isHovered: boolean)
+function UIAnimations.hover(element: GuiObject, isHovered: boolean)
 	local scale = getUIScale(element)
 	local targetScale = isHovered and 1.05 or 1.0
 
 	playTween(scale, STYLE.hover, { Scale = targetScale })
 end
 
-function AnimationManager.popOut(element: GuiObject)
+function UIAnimations.popOut(element: GuiObject)
 	local scale = getUIScale(element)
 
 	scale.Scale = 1.15
 	playTween(scale, STYLE.popOut, { Scale = 1.0 })
 end
 
-function AnimationManager.fade(canvasGroup: CanvasGroup, isVisible: boolean)
+function UIAnimations.fade(canvasGroup: CanvasGroup, isVisible: boolean)
 	local targetAlpha = isVisible and 0 or 1
 	playTween(canvasGroup, STYLE.fade, { GroupTransparency = targetAlpha })
 end
 
-function AnimationManager.glow(image: ImageLabel)
+function UIAnimations.glow(image: ImageLabel)
 	playTween(image, STYLE.glow, { ImageTransparency = 0.3 })
 end
 
-function AnimationManager.windowOpen(canvasGroup: CanvasGroup, scaleTarget: GuiObject)
+function UIAnimations.windowOpen(canvasGroup: CanvasGroup, scaleTarget: GuiObject)
 	local scale = getUIScale(scaleTarget)
 
 	scale.Scale = 0.85
@@ -93,7 +93,7 @@ function AnimationManager.windowOpen(canvasGroup: CanvasGroup, scaleTarget: GuiO
 	playTween(canvasGroup, STYLE.windowOpen, { GroupTransparency = 0 })
 end
 
-function AnimationManager.windowClose(canvasGroup: CanvasGroup, scaleTarget: GuiObject)
+function UIAnimations.windowClose(canvasGroup: CanvasGroup, scaleTarget: GuiObject)
 	local scale = getUIScale(scaleTarget)
 
 	playTween(scale, STYLE.windowClose, { Scale = 0.9 })
@@ -106,7 +106,7 @@ function AnimationManager.windowClose(canvasGroup: CanvasGroup, scaleTarget: Gui
 	end)
 end
 
-function AnimationManager.staggerSectionsIn(sections: { CanvasGroup })
+function UIAnimations.staggerSectionsIn(sections: { CanvasGroup })
 	for index, section in ipairs(sections) do
 		section.GroupTransparency = 1
 
@@ -118,7 +118,7 @@ function AnimationManager.staggerSectionsIn(sections: { CanvasGroup })
 	end
 end
 
-function AnimationManager.staggerPopIn(element: GuiObject, index: number)
+function UIAnimations.staggerPopIn(element: GuiObject, index: number)
 	local scale = getUIScale(element)
 	scale.Scale = 0
 
@@ -129,14 +129,14 @@ function AnimationManager.staggerPopIn(element: GuiObject, index: number)
 	end)
 end
 
-function AnimationManager.cancel(target: Instance)
+function UIAnimations.cancel(target: Instance)
 	if active[target] then
 		active[target]:Cancel()
 		active[target] = nil
 	end
 end
 
-function AnimationManager.typewrite(textLabel: TextLabel, text: string, speedPerChar: number?)
+function UIAnimations.typewrite(textLabel: TextLabel, text: string, speedPerChar: number?)
 	if active[textLabel] then
 		active[textLabel]:Cancel()
 	end
@@ -165,4 +165,4 @@ function AnimationManager.typewrite(textLabel: TextLabel, text: string, speedPer
 	tween:Play()
 end
 
-return AnimationManager
+return UIAnimations

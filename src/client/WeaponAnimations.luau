@@ -47,13 +47,13 @@ local slashReach: number? = nil
 local SLASH_OFFSET = Vector3.new(0, 0.5, -2.5) -- in front the player
 local SLASH_TILT = 55
 local MAX_SLASH_DISTANCE = 120 -- how far the effect can be seen by others
-local SLASH_BASE_REACH = 8 -- the hitbox reach the slash template looks right at
+local SLASH_BASE_REACH = 8
 
 -----------------------------------
 -- Module definition & state
 -----------------------------------
 
-local WeaponAnimationManager = {}
+local WeaponAnimations = {}
 
 -----------------------------------
 -- Helper functions
@@ -336,7 +336,7 @@ end
 -- Public functions
 -----------------------------------
 
-function WeaponAnimationManager.onStart()
+function WeaponAnimations.onStart()
 	PlayerManager.onChange(refresh)
 
 	player.CharacterAdded:Connect(characterAnimations)
@@ -362,7 +362,7 @@ function WeaponAnimationManager.onStart()
 end
 
 -- fires on every click
-function WeaponAnimationManager.attack()
+function WeaponAnimations.attack()
 	Attack:FireServer()
 
 	local count = #comboTracks
@@ -381,4 +381,4 @@ function WeaponAnimationManager.attack()
 	end
 end
 
-return WeaponAnimationManager
+return WeaponAnimations

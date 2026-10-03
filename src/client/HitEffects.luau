@@ -23,6 +23,7 @@ local active = 0
 -- Helper functions
 -----------------------------------
 
+-- helper for scaling particles
 local function scaleSequence(sequence: NumberSequence, scale: number): NumberSequence
 	local keypoints = {}
 	for _, keypoint in sequence.Keypoints do
@@ -34,6 +35,7 @@ local function scaleSequence(sequence: NumberSequence, scale: number): NumberSeq
 	return NumberSequence.new(keypoints)
 end
 
+-- scales particles
 local function applyScale(effect: Instance, scale: number)
 	for _, descendant in effect:GetDescendants() do
 		if descendant:IsA("ParticleEmitter") then

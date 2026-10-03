@@ -9,24 +9,13 @@ local player = Players.LocalPlayer
 local PlayerScripts = player:WaitForChild("PlayerScripts")
 
 local Client = PlayerScripts.Client
-
-local WeaponAnimationManager = require(Client.WeaponAnimationManager)
-
--- Types
-
--- Variables
-
--- Constants
+local WeaponAnimations = require(Client.WeaponAnimations)
 
 -----------------------------------
 -- Module definition & state
 -----------------------------------
 
 local Inputs = {}
-
------------------------------------
--- Helper functions
------------------------------------
 
 -----------------------------------
 -- Public functions
@@ -37,7 +26,7 @@ function Inputs.onStart()
 			return
 		end
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			WeaponAnimationManager.attack()
+			WeaponAnimations.attack()
 		end
 	end)
 end

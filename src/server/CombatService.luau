@@ -8,20 +8,22 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 -- Dependencies
 local Server = ServerScriptService.Server
-local AnimationTimings = require(ReplicatedStorage.Shared.AnimationTimings)
-local ItemData = require(ReplicatedStorage.Shared.ItemData)
 local DamageCalculationService = require(Server.DamageCalculationService)
 local HitboxService = require(Server.HitboxService)
 local PlayerService = require(Server.PlayerService)
-local StatsService = require(ServerScriptService.Server.StatsService)
+local StatsService = require(Server.StatsService)
+
+local Shared = ReplicatedStorage.Shared
+local AnimationTimings = require(Shared.AnimationTimings)
+local ItemData = require(Shared.ItemData)
+local Types = require(Shared.Types)
+local Util = require(Shared.Util)
 
 local Remotes = ReplicatedStorage.Remotes
-local Types = require(ReplicatedStorage.Shared.Types)
-local Util = require(ReplicatedStorage.Shared.Util)
-local Attack = Remotes.Attack
 local HitConfirmed = Remotes.HitConfirmed
 local SwingStarted = Remotes.SwingStarted
 local DamageDealt = Remotes.DamageDealt
+local Attack = Remotes.Attack
 
 -- Types
 type PlayerData = Types.PlayerData
@@ -164,15 +166,16 @@ local function finishCombo(state: SwingState)
 end
 
 -- logic for wind up, active and recovery
+-- recursion
 startSwing = function(entity: Entity, weaponInfo: WeaponInfo, state: SwingState)
 	local humanoid = entity.humanoid
 	local combo = weaponInfo.animations.combo
 
-	-- wind up
 	state.phase = "windup"
 	state.queued = false
 
 	state.thread = task.spawn(function()
+		-- wind up
 		local step = state.step
 		local timing = AnimationTimings.get(combo[step].id)
 		local speed = math.max(1 + entity:getStat("attackSpeed" :: any), MIN_ATTACK_SPEED)
@@ -212,8 +215,6 @@ startSwing = function(entity: Entity, weaponInfo: WeaponInfo, state: SwingState)
 		-- recovery
 		local isFinisher = step >= #combo
 		local nextStep = step % #combo + 1
-
-		-- queues for the next combo start if clicking too fast
 		if state.queued and not isFinisher then
 			state.step = nextStep
 			startSwing(entity, weaponInfo, state)
@@ -223,6 +224,7 @@ startSwing = function(entity: Entity, weaponInfo: WeaponInfo, state: SwingState)
 		state.phase = "recovery"
 		task.wait(timing.recovery / speed)
 
+		-- queues for the next combo start if clicking too fast
 		if state.queued then
 			state.step = 1
 			startSwing(entity, weaponInfo, state)
