@@ -23,8 +23,27 @@ local active = 0
 -- Helper functions
 -----------------------------------
 
+local function scaleSequence(sequence: NumberSequence, scale: number): NumberSequence
+	local keypoints = {}
+	for _, keypoint in sequence.Keypoints do
+		table.insert(
+			keypoints,
+			NumberSequenceKeypoint.new(keypoint.Time, keypoint.Value * scale, keypoint.Envelope * scale)
+		)
+	end
+	return NumberSequence.new(keypoints)
+end
+
+local function applyScale(effect: Instance, scale: number)
+	for _, descendant in effect:GetDescendants() do
+		if descendant:IsA("ParticleEmitter") then
+			descendant.Size = scaleSequence(descendant.Size, scale)
+		end
+	end
+end
+
 -- creates the effect at the target position
-local function play(name: string, cframe: CFrame)
+local function play(name: string, cframe: CFrame, scale: number?)
 	local template = templates[name]
 	if not template or active >= MAX_ACTIVE then
 		return
@@ -32,6 +51,9 @@ local function play(name: string, cframe: CFrame)
 	active += 1
 
 	local effect = template:Clone()
+	if scale and scale ~= 1 then
+		applyScale(effect, scale)
+	end
 	effect.Anchored = true
 	effect.CanCollide = false
 	effect.CanQuery = false
@@ -66,8 +88,8 @@ end
 -----------------------------------
 
 -- runs the effects for the slash from template
-function HitEffects.playSlash(cframe: CFrame)
-	play("slash", cframe)
+function HitEffects.playSlash(cframe: CFrame, scale: number?)
+	play("slash", cframe, scale)
 end
 
 function HitEffects.onStart()

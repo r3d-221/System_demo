@@ -21,6 +21,7 @@ local Util = require(ReplicatedStorage.Shared.Util)
 local Attack = Remotes.Attack
 local HitConfirmed = Remotes.HitConfirmed
 local SwingStarted = Remotes.SwingStarted
+local DamageDealt = Remotes.DamageDealt
 
 -- Types
 type PlayerData = Types.PlayerData
@@ -134,6 +135,9 @@ local function applyHits(entity: Entity, hitbox: any, swing: { hit: { [Humanoid]
 		local wasAlive = target.Health > 0
 		local context = createContext(entity, target)
 		local result = DamageCalculationService.calculateHit(context)
+		if result.amount > 0 then
+			DamageDealt:FireAllClients(target, result.amount, result.isCrit)
+		end
 		target:TakeDamage(result.amount)
 
 		-- creates a hit effect
@@ -145,7 +149,7 @@ local function applyHits(entity: Entity, hitbox: any, swing: { hit: { [Humanoid]
 			end
 		end
 
-		print("[CombatService] " .. targetModel.Name .. " took " .. result.amount .. " damage")
+		-- print("[CombatService] " .. targetModel.Name .. " took " .. result.amount .. " damage")
 	end
 end
 
@@ -187,7 +191,8 @@ startSwing = function(entity: Entity, weaponInfo: WeaponInfo, state: SwingState)
 		state.phase = "active"
 		local slash = combo[step].slash
 		if slash then
-			SwingStarted:FireAllClients(entity.model, step, slash)
+			local reach = weaponInfo.hitbox.range or weaponInfo.hitbox.radius
+			SwingStarted:FireAllClients(entity.model, step, slash, reach)
 		end
 		local hitbox = HitboxService.new(weaponInfo.hitbox, entity.rootPart.CFrame, { entity.model }, SHOW_HITBOX)
 		state.hitbox = hitbox

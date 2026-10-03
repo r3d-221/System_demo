@@ -35,6 +35,9 @@
         },
         "SwingStarted": {
           "$className": "RemoteEvent"
+        },
+        "DamageDealt": {
+          "$className": "RemoteEvent"
         }
       }
     },

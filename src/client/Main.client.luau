@@ -5,6 +5,7 @@ local PlayerScripts = player:WaitForChild("PlayerScripts")
 
 local Client = PlayerScripts.Client
 
+local DamageIndicationManager = require(Client.DamageIndicationManager)
 local HitEffects = require(Client.HitEffects)
 local Inputs = require(Client.Inputs)
 local WeaponAnimationManager = require(Client.WeaponAnimationManager)
@@ -18,3 +19,4 @@ Inventory.onStart()
 Inputs.onStart()
 HitEffects.onStart()
 WeaponAnimationManager.onStart()
+DamageIndicationManager.onStart()

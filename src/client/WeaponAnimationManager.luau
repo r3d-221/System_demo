@@ -41,11 +41,13 @@ local step = 1
 local phase: Phase = "idle"
 local queued = false
 local current: AnimationTrack? = nil
+local slashReach: number? = nil
 
 -- Constants
 local SLASH_OFFSET = Vector3.new(0, 0.5, -2.5) -- in front the player
 local SLASH_TILT = 55
 local MAX_SLASH_DISTANCE = 120 -- how far the effect can be seen by others
+local SLASH_BASE_REACH = 8 -- the hitbox reach the slash template looks right at
 
 -----------------------------------
 -- Module definition & state
@@ -96,6 +98,7 @@ local function clearTracks()
 	end
 
 	current = nil
+	slashReach = nil
 	step = 1
 	phase = "idle"
 	queued = false
@@ -158,30 +161,32 @@ local function playStep(index: number)
 end
 
 -- runs slash effect
-local function playSlash(index: number, name: string?, root: BasePart?)
+local function playSlash(index: number, name: string?, root: BasePart?, reach: number?)
 	if not name or not root then
 		return
 	end
 
 	local odd = index % 2 == 1
+	local scale = if reach then math.clamp(reach / SLASH_BASE_REACH, 0.5, 2.5) else 1
 
 	-- for left-to-right slash
-	local offset = CFrame.new(SLASH_OFFSET)
 	local rotation = CFrame.Angles(math.rad(90), 0, 0)
+	local offset = Vector3.new(SLASH_OFFSET.X, SLASH_OFFSET.Y, SLASH_OFFSET.Z * scale)
 	local tilt = CFrame.Angles(0, math.rad(if odd then SLASH_TILT else -SLASH_TILT), 0)
-	local cframe = root.CFrame * offset * rotation * tilt
+	local cframe = root.CFrame * CFrame.new(offset) * rotation * tilt
 
 	-- for right-to-left slash
 	if not odd then
 		cframe *= CFrame.Angles(math.pi, 0, 0)
 	end
 
-	HitEffects.playSlash(cframe)
+	HitEffects.playSlash(cframe, scale)
 end
 
 -- sets up connection for the combo based on the markers in the animation
 local function createTracks(info: WeaponInfo)
 	local combo = info.animations.combo
+	slashReach = info.hitbox.range or info.hitbox.radius
 
 	for index, comboStep in combo do
 		local track = loadTrack(comboStep.id, Enum.AnimationPriority.Action, false)
@@ -199,7 +204,8 @@ local function createTracks(info: WeaponInfo)
 				playSlash(
 					index,
 					comboStep.slash,
-					character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+					character and character:FindFirstChild("HumanoidRootPart") :: BasePart?,
+					slashReach
 				)
 			end)
 		)
@@ -339,7 +345,7 @@ function WeaponAnimationManager.onStart()
 	end
 
 	-- sets animation for enemies
-	SwingStarted.OnClientEvent:Connect(function(model: Model?, index: number, name: string)
+	SwingStarted.OnClientEvent:Connect(function(model: Model?, index: number, name: string, reach: number?)
 		-- return if player since the animation already played
 		if not model or model == player.Character then
 			return
@@ -351,7 +357,7 @@ function WeaponAnimationManager.onStart()
 			return
 		end
 
-		playSlash(index, name, root)
+		playSlash(index, name, root, reach)
 	end)
 end
 
