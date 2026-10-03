@@ -12,7 +12,7 @@ local PlayerScripts = player:WaitForChild("PlayerScripts")
 local Client = PlayerScripts.Client
 local PlayerManager = require(Client.PlayerManager)
 local UIManager = require(Client.UIManager)
-local AnimationManager = require(Client.AnimationManager)
+local UIAnimationManager = require(Client.UIAnimationManager)
 local Inventory = require(Client.Inventory)
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
@@ -58,22 +58,22 @@ local function setUpButtons()
 	end)
 
 	inventoryButton.MouseEnter:Connect(function()
-		AnimationManager.hover(map.inventory, true)
+		UIAnimationManager.hover(map.inventory, true)
 	end)
 
 	inventoryButton.MouseLeave:Connect(function()
-		AnimationManager.hover(map.inventory, false)
+		UIAnimationManager.hover(map.inventory, false)
 	end)
 
 	inventoryButton.MouseButton1Click:Connect(function()
-		AnimationManager.popOut(map.inventory)
+		UIAnimationManager.popOut(map.inventory)
 
 		local wasOpen = (currentButton == "inventory")
 
 		if not wasOpen then
 			UIManager.closeAll()
 
-			AnimationManager.windowOpen(inventory, canvas)
+			UIAnimationManager.windowOpen(inventory, canvas)
 			Inventory.playSectionFades()
 			currentButton = "inventory"
 
@@ -87,7 +87,7 @@ local function setUpButtons()
 			UIManager.closeAll()
 			currentButton = nil
 
-			AnimationManager.windowClose(inventory, canvas)
+			UIAnimationManager.windowClose(inventory, canvas)
 
 			Inventory.clearSlots()
 			Inventory.clearStats()

@@ -1,11 +1,16 @@
 --!strict
 
 -- Services
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 
 -- Dependencies
-local Attack = ReplicatedStorage.Remotes.Attack
+local player = Players.LocalPlayer
+local PlayerScripts = player:WaitForChild("PlayerScripts")
+
+local Client = PlayerScripts.Client
+
+local WeaponAnimationManager = require(Client.WeaponAnimationManager)
 
 -- Types
 
@@ -32,7 +37,7 @@ function Inputs.onStart()
 			return
 		end
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			Attack:FireServer()
+			WeaponAnimationManager.attack()
 		end
 	end)
 end

@@ -29,6 +29,12 @@
         },
         "SellItem": {
           "$className": "RemoteEvent"
+        },
+        "HitConfirmed": {
+          "$className": "RemoteEvent"
+        },
+        "SwingStarted": {
+          "$className": "RemoteEvent"
         }
       }
     },

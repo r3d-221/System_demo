@@ -16,6 +16,7 @@ export type HitboxType = "arc" | "sphere" | "raycast" | "cylinder"
 export type EnemyType = "melee" | "range" | "boss"
 export type EnemySubType = "fast" | "tank" | "armor" | "miniBoss" | "none"
 export type EnemyStatNames = "health" | "damage" | "armor" | "speed" | "critRate" | "critDamage"
+export type CombatPhase = "idle" | "windup" | "active" | "recovery"
 
 export type StatNames = WeaponStatName | ArmorStatName
 export type WeaponStats = { [WeaponStatName]: Roll }
@@ -76,12 +77,10 @@ export type WeaponInfo = {
 	description: string,
 	keywords: { string },
 	hitbox: HitboxConfig,
-	windUp: number,
-	active: number,
-	recovery: number,
 	type: ItemTypes,
 	tags: { ItemTags },
 	image: string?,
+	animations: { idle: string, run: string?, combo: { ComboStep } },
 }
 
 export type MaterialInfo = {
@@ -145,10 +144,20 @@ export type DamageResult = {
 	isCrit: boolean,
 }
 
+export type SwingState = {
+	step: number,
+	phase: CombatPhase,
+	queued: boolean,
+	thread: thread?,
+	hitbox: any,
+}
+
 export type RarityMap = { [RarityName]: number }
 export type WeaponDataMap = { [string]: WeaponInfo }
 export type MaterialDataMap = { [string]: MaterialInfo }
 export type EnemyDataMap = { [string]: EnemyInfo }
+export type ComboStep = { id: string, slash: string? }
+export type Timing = { windUp: number, active: number, recovery: number, length: number }
 export type DropEntry = { amount: { min: number, max: number }, chance: number }
 
 return Types

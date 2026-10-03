@@ -1,0 +1,91 @@
+--!strict
+local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Dependencies
+local vfx = require(ReplicatedStorage.EmitModule) -- from UI forge
+local HitConfirmed = ReplicatedStorage.Remotes.HitConfirmed
+
+-- Constants
+local TEXTURE_LOAD_TAG = "LoadVFXTextures"
+local MAX_ACTIVE = 12
+local CLEANUP_DELAY = 2
+
+-----------------------------------
+-- Module definition & state
+-----------------------------------
+
+local HitEffects = {}
+local templates = {}
+local active = 0
+
+-----------------------------------
+-- Helper functions
+-----------------------------------
+
+-- creates the effect at the target position
+local function play(name: string, cframe: CFrame)
+	local template = templates[name]
+	if not template or active >= MAX_ACTIVE then
+		return
+	end
+	active += 1
+
+	local effect = template:Clone()
+	effect.Anchored = true
+	effect.CanCollide = false
+	effect.CanQuery = false
+	effect.CanTouch = false
+	effect.Transparency = 1
+	effect.CFrame = cframe
+	effect.Parent = workspace.Terrain
+
+	-- debounce set
+	local released = false
+	local function release()
+		if released then
+			return
+		end
+		released = true
+		active -= 1
+		effect:Destroy()
+	end
+
+	-- runs the debounce again if it didn't trigger the first time
+	local ok, handle = pcall(vfx.emit, effect)
+	if ok and handle then
+		handle.Finished:finally(release)
+		task.delay(CLEANUP_DELAY, release)
+	else
+		release()
+	end
+end
+
+-----------------------------------
+-- Public functions
+-----------------------------------
+
+-- runs the effects for the slash from template
+function HitEffects.playSlash(cframe: CFrame)
+	play("slash", cframe)
+end
+
+function HitEffects.onStart()
+	vfx.init() -- UI forge
+
+	-- sets up the templates table on start
+	local folder = ReplicatedStorage:WaitForChild("vfx")
+	templates.hit = folder:WaitForChild("hit")
+	templates.slash = folder:WaitForChild("slash")
+
+	-- UI forge tags
+	CollectionService:AddTag(templates.hit, TEXTURE_LOAD_TAG)
+	CollectionService:AddTag(templates.slash, TEXTURE_LOAD_TAG)
+
+	-- runs the hit effect
+	HitConfirmed.OnClientEvent:Connect(function(position: Vector3)
+		play("hit", CFrame.new(position))
+	end)
+end
+
+return HitEffects
