@@ -75,6 +75,11 @@ local function show(humanoid: Humanoid, amount: number, isCrit: boolean)
 	if stroke then
 		TweenService:Create(stroke, fadeInfo, { Transparency = 1 }):Play()
 	end
+
+	task.delay(LIFETIME, function()
+		active[gui] = math.max((active[gui] or 1) - 1, 0)
+		label:Destroy()
+	end)
 end
 
 -----------------------------------

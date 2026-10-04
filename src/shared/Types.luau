@@ -87,6 +87,7 @@ export type MaterialInfo = {
 	name: string,
 	rarity: RarityName,
 	description: string,
+	image: string?,
 }
 
 export type EnemyInfo = {

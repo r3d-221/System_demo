@@ -970,7 +970,7 @@ function Inventory.updateStats()
 			local isPercent = ItemData.statTypes[name] == "percent"
 			local displayValue = if isPercent
 				then string.format("%.1f%%", stat.value * 100)
-				else tostring(math.round(stat.value))
+				else tostring(math.floor(stat.value))
 
 			createStat(ItemData.statNames[name], stat.rank, displayValue, index)
 		end

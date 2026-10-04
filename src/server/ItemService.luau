@@ -2,7 +2,6 @@
 
 -- Services
 local ServerScriptService = game:GetService("ServerScriptService")
-local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
@@ -19,10 +18,6 @@ local Util = require(Shared.Util)
 type Stats = Types.Stats
 type Item = Types.Item
 type Category = Types.Category
-
--- Constants
-local GENERATOR_TAG = "Generator"
-local PROMPT_NAME = "prompt"
 
 local RANKS = {
 	SSS = 0.005,
@@ -99,26 +94,6 @@ function ItemService.giveItem(player: Player, id: string, category: Category, am
 	local item = ItemService.createItem(id, category, amount)
 	if item then
 		PlayerService.addItem(player, item, category)
-	end
-end
-
-function ItemService.onStart()
-	for _, object in CollectionService:GetTagged(GENERATOR_TAG) do
-		local prompt = object:FindFirstChild(PROMPT_NAME) :: ProximityPrompt?
-		local id = object:FindFirstChild("id") :: StringValue?
-
-		local category = object:FindFirstChild("category") :: StringValue?
-
-		if prompt and id and category then
-			prompt.Triggered:Connect(function(player: Player)
-				if category.Value ~= "materials" then
-					ItemService.giveItem(player, id.Value, category.Value :: Category)
-					print(string.format("[ItemService] %s obtained %s", player.Name, id.Value))
-				end
-			end)
-		else
-			warn("[ItemService] Generator missing prompt, id, or category: " .. object.Name)
-		end
 	end
 end
 

@@ -319,7 +319,7 @@ function EnemyService.dead(self: Enemy)
 		self.onDead()
 	end
 
-	task.delay(3, function()
+	task.delay(1, function()
 		self:destroy()
 	end)
 end

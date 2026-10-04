@@ -40,11 +40,11 @@ local EnemyData: EnemyData = {
 			drops = {
 				scraps = {
 					amount = { min = 2, max = 5 },
-					chance = 0.6,
+					chance = 1,
 				},
 				cloths = {
 					amount = { min = 1, max = 3 },
-					chance = 0.2,
+					chance = 0.3,
 				},
 			},
 			attackRange = 10,

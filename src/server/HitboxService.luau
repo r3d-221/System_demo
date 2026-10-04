@@ -17,6 +17,8 @@ type Properties = {
 	params: OverlapParams?,
 	rayParams: RaycastParams?,
 	weld: WeldConstraint?,
+	weldTo: BasePart?,
+	offset: CFrame?,
 	origin: CFrame,
 	config: Config,
 }
@@ -159,7 +161,7 @@ function HitboxService.Check(self: Hitbox, filter: FilterFunction?): { BasePart 
 
 	local effectiveFilter = filter
 	if self.config and self.config.type == "arc" then
-		local cone = coneFilter(self.origin.Position, self.origin.LookVector, self.config.angle or 60)
+		local cone = coneFilter(self:GetOrigin().Position, self:GetOrigin().LookVector, self.config.angle or 60)
 		effectiveFilter = if filter
 			then function(part: BasePart)
 				return cone(part) and (filter :: FilterFunction)(part)
@@ -186,7 +188,7 @@ function HitboxService.Raycast(self: Hitbox): RaycastResult?
 	assert(self.rayParams, "[HitboxService]: Hitbox raycast params wasn't created.")
 
 	local range = self.config.range or 10
-	return Workspace:Raycast(self.origin.Position, self.origin.LookVector * range, self.rayParams)
+	return Workspace:Raycast(self:GetOrigin().Position, self:GetOrigin().LookVector * range, self.rayParams)
 end
 
 function HitboxService.CheckHumanoids(self: Hitbox): { Humanoid }
@@ -218,12 +220,25 @@ function HitboxService.CheckHumanoids(self: Hitbox): { Humanoid }
 	return humanoids
 end
 
+function HitboxService.GetOrigin(self: Hitbox): CFrame
+	if self.weldTo and self.offset then
+		return self.weldTo.CFrame * self.offset
+	end
+	return self.origin
+end
+
 function HitboxService.WeldTo(self: Hitbox, part: BasePart)
 	assert(self.part, "[HitboxService] couldn't find a part to weld to")
 
 	if self.weld then
 		self.janitor:Remove("weld")
 	end
+
+	self.weldTo = part
+	self.offset = part.CFrame:ToObjectSpace(self.origin)
+
+	self.part.Anchored = false
+	self.part.Massless = true
 
 	local weld = Instance.new("WeldConstraint")
 	weld.Part0 = self.part
