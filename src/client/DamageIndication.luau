@@ -10,11 +10,11 @@ local DamageDealt = ReplicatedStorage.Remotes:WaitForChild("DamageDealt") :: Rem
 -- Constants
 local NORMAL_COLOR = Color3.fromRGB(255, 255, 255)
 local CRIT_COLOR = Color3.fromRGB(255, 200, 40)
-local LIFETIME = 0.8
-local FLOAT_UP = 100
-local SPREAD = 40
+local INDICATOR = "enemy_ui"
 local MAX_PER_ENEMY = 6
-local INDICATOR = "damage_indicator"
+local LIFETIME = 0.8
+local FLOAT_UP = 0.32
+local SPREAD = 15
 
 -----------------------------------
 -- Module definition & state
@@ -43,9 +43,10 @@ local function show(humanoid: Humanoid, amount: number, isCrit: boolean)
 	active[gui] = count + 1
 
 	local label = template:Clone()
+	local startPos = template.Position
 	label.Text = if isCrit then `{amount}!` else tostring(amount)
 	label.TextColor3 = if isCrit then CRIT_COLOR else NORMAL_COLOR
-	label.Position = UDim2.new(0.5, math.random(-SPREAD, SPREAD), 0.7, 0)
+	label.Position = UDim2.fromScale(0.5 + math.random(-SPREAD, SPREAD) / 100, startPos.Y.Scale)
 	label.Visible = true
 	label.Parent = gui
 
@@ -63,7 +64,7 @@ local function show(humanoid: Humanoid, amount: number, isCrit: boolean)
 	-- float up
 	local riseInfo = TweenInfo.new(LIFETIME, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 	TweenService:Create(label, riseInfo, {
-		Position = label.Position - UDim2.fromOffset(0, FLOAT_UP),
+		Position = label.Position - UDim2.fromScale(0, FLOAT_UP),
 	}):Play()
 
 	-- fade out

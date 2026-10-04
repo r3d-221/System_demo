@@ -5,6 +5,8 @@ local PlayerScripts = player:WaitForChild("PlayerScripts")
 
 local Client = PlayerScripts.Client
 
+local EnemyHealthbar = require(Client.EnemyHealthbar)
+local Healthbar = require(Client.Healthbar)
 local DamageIndication = require(Client.DamageIndication)
 local HitEffects = require(Client.HitEffects)
 local Inputs = require(Client.Inputs)
@@ -20,3 +22,5 @@ Inputs.onStart()
 HitEffects.onStart()
 WeaponAnimations.onStart()
 DamageIndication.onStart()
+Healthbar.onStart()
+EnemyHealthbar.onStart()

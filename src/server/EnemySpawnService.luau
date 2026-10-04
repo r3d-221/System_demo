@@ -17,7 +17,7 @@ local EnemyData = require(Shared.EnemyData)
 local Types = require(Shared.Types)
 
 local enemyModels = ReplicatedStorage.enemies
-local damageIndicator = ReplicatedStorage.templates.damage_indicator
+local enemyUi = ReplicatedStorage.templates.enemy_ui
 
 -- Types
 type EnemyInfo = Types.EnemyInfo
@@ -66,7 +66,7 @@ local function spawn(spawnPoint: BasePart, id: string, config: EnemyInfo, onDead
 
 	local head = enemy.model:FindFirstChild("Head")
 	if head then
-		local clone = damageIndicator:Clone()
+		local clone = enemyUi:Clone()
 		clone.Parent = head
 	end
 	enemy.model:SetAttribute("damage", enemy.stats["damage" :: StatNames])
