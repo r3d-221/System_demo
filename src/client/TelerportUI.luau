@@ -20,7 +20,7 @@ local DIMMED = 0.5
 -- Module definition & state
 -----------------------------------
 
-local Telerpot = {}
+local TelerportUI = {}
 local tracked: { [BasePart]: UI } = {}
 
 -----------------------------------
@@ -62,7 +62,7 @@ end
 -- Public functions
 -----------------------------------
 
-function Telerpot.onStart()
+function TelerportUI.onStart()
 	workspace.DescendantAdded:Connect(consider)
 	for _, inst in workspace:GetDescendants() do
 		consider(inst)
@@ -83,4 +83,4 @@ function Telerpot.onStart()
 	end)
 end
 
-return Telerpot
+return TelerportUI

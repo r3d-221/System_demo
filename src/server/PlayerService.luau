@@ -12,8 +12,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 -- Dependencies
-local Remotes = ReplicatedStorage:WaitForChild("Remotes")
-local SyncData = Remotes:WaitForChild("SyncData") :: RemoteEvent
+local Remotes = ReplicatedStorage.Remotes
+local SyncData = Remotes.SyncData
 
 local StatsService = require(ServerScriptService.Server.StatsService)
 local Types = require(ReplicatedStorage.Shared.Types)
@@ -71,7 +71,7 @@ end
 
 local function clearData(player: Player)
 	playerData[player] = nil
-	print("[PlayerService] Data cleaned up for: " .. player.Name)
+	-- print("[PlayerService] Data cleaned up for: " .. player.Name)
 end
 
 -----------------------------------

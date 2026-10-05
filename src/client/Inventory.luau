@@ -14,12 +14,12 @@ local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 local PlayerScripts = player:WaitForChild("PlayerScripts")
 
-local Client = PlayerScripts:WaitForChild("Client")
+local Client = PlayerScripts.Client
 local PlayerManager = require(Client.PlayerManager)
 local UIManager = require(Client.UIManager)
 local UIAnimations = require(Client.UIAnimations)
 
-local Shared = ReplicatedStorage:FindFirstChild("Shared")
+local Shared = ReplicatedStorage.Shared
 local ItemData = require(Shared.ItemData)
 local Types = require(Shared.Types)
 local Util = require(Shared.Util)

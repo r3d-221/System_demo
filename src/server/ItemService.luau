@@ -12,11 +12,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
 -- Dependencies
-local Server = ServerScriptService:WaitForChild("Server")
+local Server = ServerScriptService.Server
 local ItemInfo = require(ReplicatedStorage.Shared.ItemInfo)
-local PlayerService = require(Server.PlayerService)
+local InventoryService = require(Server.InventoryService)
 
-local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Shared = ReplicatedStorage.Shared
 local Types = require(Shared.Types)
 local Util = require(Shared.Util)
 
@@ -25,6 +25,7 @@ type Stats = Types.Stats
 type Item = Types.Item
 type Category = Types.Category
 
+-- Constants
 local RANKS = {
 	SSS = 0.005,
 	SS = 0.015,
@@ -99,7 +100,7 @@ end
 function ItemService.giveItem(player: Player, id: string, category: Category, amount: number?)
 	local item = ItemService.createItem(id, category, amount)
 	if item then
-		PlayerService.addItem(player, item, category)
+		InventoryService.addItem(player, item, category)
 	end
 end
 

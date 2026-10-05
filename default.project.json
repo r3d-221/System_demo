@@ -15,9 +15,6 @@
         "SyncData": {
           "$className": "RemoteEvent"
         },
-        "Getitem": {
-          "$className": "RemoteEvent"
-        },
         "Attack": {
           "$className": "RemoteEvent"
         },

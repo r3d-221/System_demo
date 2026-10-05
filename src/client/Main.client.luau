@@ -7,7 +7,7 @@ local PlayerScripts = player:WaitForChild("PlayerScripts")
 
 local Client = PlayerScripts.Client
 
-local Telerpot = require(Client.Telerpot)
+local TelerportUI = require(Client.TelerportUI)
 local EnemyHealthbar = require(Client.EnemyHealthbar)
 local Healthbar = require(Client.Healthbar)
 local DamageIndication = require(Client.DamageIndication)
@@ -27,4 +27,4 @@ WeaponAnimations.onStart()
 DamageIndication.onStart()
 Healthbar.onStart()
 EnemyHealthbar.onStart()
-Telerpot.onStart()
+TelerportUI.onStart()

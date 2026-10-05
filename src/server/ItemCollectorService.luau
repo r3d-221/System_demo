@@ -12,10 +12,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 -- Dependencies
-local Server = ServerScriptService:WaitForChild("Server")
+local Server = ServerScriptService.Server
 local ItemService = require(Server.ItemService)
 
-local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Shared = ReplicatedStorage.Shared
 local ItemData = require(Shared.ItemData)
 local ItemInfo = require(Shared.ItemInfo)
 local Types = require(Shared.Types)

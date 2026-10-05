@@ -17,17 +17,19 @@ local StatsService = require(Server.StatsService)
 local EquipmentService = require(Server.EquipmentService)
 local Types = require(ReplicatedStorage.Shared.Types)
 
-local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local Remotes = ReplicatedStorage.Remotes
 local EquipItem = Remotes.EquipItem
 local UnequipItem = Remotes.UnequipItem
 local SellItem = Remotes.SellItem
+local SyncData = Remotes.SyncData
 
 -- Types
 type Category = Types.Category
 type PlayerData = Types.PlayerData
+type Item = Types.Item
 
 -- Constants
-local EQUIPPABLE_CATEGORIES: { [Category]: boolean } = { weapons = true } -- add armors
+local EQUIPPABLE_CATEGORIES: { [Category]: boolean } = { weapons = true, armors = true }
 local SELLABLE_CATEGORIES: { [Category]: boolean } = { weapons = true, armors = true }
 
 -----------------------------------
@@ -159,6 +161,39 @@ function InventoryService.onStart()
 		StatsService.recalculate(data)
 		PlayerService.sync(player)
 	end)
+end
+
+function InventoryService.addItem(player: Player, item: Item, category: Category)
+	local data = PlayerService.getData(player)
+	if not data then
+		return
+	end
+
+	local categoryList = data.items[category]
+	if not categoryList then
+		warn("[PlayerService] Attempted to add item to invalid category: " .. tostring(category))
+		return
+	end
+
+	if category == "materials" then
+		local existing
+		for _, existingItem in categoryList do
+			if existingItem.id == item.id then
+				existing = existingItem
+				break
+			end
+		end
+
+		if existing then
+			existing.amount = (existing.amount or 0) + (item.amount or 1)
+		else
+			table.insert(categoryList, item)
+		end
+	else
+		table.insert(categoryList, item)
+	end
+
+	SyncData:FireClient(player, data)
 end
 
 return InventoryService
