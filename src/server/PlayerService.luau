@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles player data. Doesn't save the data per session since it's
+	excessive for a demo.
+]]
+
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

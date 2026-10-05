@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles the buttons in HUD UI.
+]]
+
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

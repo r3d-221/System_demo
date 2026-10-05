@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles the inputs from the client.	
+]]
+
 -- Services
 local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")

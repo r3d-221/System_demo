@@ -1,15 +1,30 @@
 --!strict
 
+-- Description
+local _ = [[
+	returns item data based on the ItemData module.
+]]
+
+-- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+-- Dependencies
 local ItemData = require(ReplicatedStorage.Shared.ItemData)
 local Types = require(ReplicatedStorage.Shared.Types)
 
+-- Types
 type Category = Types.Category
 
-local CategoryList: { Category } = { "weapons", "armors", "materials" }
+-----------------------------------
+-- Module definition & state
+-----------------------------------
 
 local ItemInfo = {}
+local CategoryList: { Category } = { "weapons", "armors", "materials" }
+
+-----------------------------------
+-- Public functions
+-----------------------------------
 
 function ItemInfo.getCategory(id: string): Category?
 	for _, category: Category in CategoryList do

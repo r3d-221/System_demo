@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles the inventory UI.
+]]
+
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -22,9 +27,11 @@ local Signal = require(Shared.Signal)
 
 -- Templates
 local templates = ReplicatedStorage:FindFirstChild("templates")
-local slotTemplate = templates.slot_template
-local statTemplate = templates.stat_template
-local filterInfoTemplate = templates.filter_info_template
+local slotTemplate = templates:WaitForChild("slot_template") :: Frame
+local statTemplate = templates:WaitForChild("stat_template") :: Frame
+local filterInfoTemplate = templates:WaitForChild("filter_info_template") :: CanvasGroup
+local filterInfoTemplateBackground = filterInfoTemplate:FindFirstChild("background") :: ImageLabel
+local filterInfoTemplateText = filterInfoTemplate:FindFirstChild("text") :: TextLabel
 
 -- Types
 type Item = Types.Item
@@ -38,8 +45,8 @@ local TAB_KEYS: { Tab } = { "weapons", "armors", "materials" }
 local INFO_TAB_KEYS: { InfoTab } = { "stats", "passives", "description" }
 local FILTER_CATEGORIES: { FilterCategory } = { "rarity", "type", "tags" }
 local RARITY_ORDER = { "common", "rare", "epic", "legendary", "mythic", "secret" }
-local FILTER_DEFAULT_COLOR: Color3 = filterInfoTemplate.background.ImageColor3
-local FILTER_DEFAULT_TEXT_COLOR: Color3 = filterInfoTemplate.text.TextColor3
+local FILTER_DEFAULT_COLOR: Color3 = filterInfoTemplateBackground.ImageColor3
+local FILTER_DEFAULT_TEXT_COLOR: Color3 = filterInfoTemplateText.TextColor3
 local FILTER_DEFAULT_SELECTED_TEXT_COLOR = Color3.fromHex("1F2636")
 local BRIGHT_COLOR = Color3.fromRGB(0, 240, 255)
 local SEARCH_DEBOUNCE_SECONDS = 0.15
@@ -51,9 +58,9 @@ local SEARCH_FUZZY_EDIT_DISTANCE = 2
 local Inventory = {}
 Inventory.ScreenClosed = Signal.new()
 
-local screen = PlayerGui:WaitForChild("Screens")
-local inventory = screen:FindFirstChild("inventory")
-local canvas = inventory:FindFirstChild("canvas")
+local Screens = PlayerGui:WaitForChild("Screens")
+local inventory = Screens:WaitForChild("inventory") :: CanvasGroup
+local canvas = inventory:WaitForChild("canvas") :: Frame
 local map = Util.mapUI(canvas)
 
 local currentTab: Tab = "weapons"
@@ -313,6 +320,11 @@ local function equipCurrentItem()
 	if not item then
 		return
 	end
+
+	if not item.uid then
+		return
+	end
+
 	PlayerManager.equipItem(currentTab, item.uid)
 end
 
@@ -993,7 +1005,7 @@ function Inventory.updateDescription()
 	if itemData.description then
 		map.description_info.text.Text = itemData.description
 	else
-		map.description_info.text = fill
+		map.description_info.text.Text = fill
 	end
 end
 

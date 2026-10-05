@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	It calculates the damage based on the base and crit.
+	It takes context of the damage and applies based on that.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

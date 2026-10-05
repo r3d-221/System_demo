@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Data for the enemies. Each enemy data can be split into a separate
+	module for more scalability.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

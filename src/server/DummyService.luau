@@ -1,8 +1,24 @@
 --!strict
-local DummyService = {}
 
+-- Description
+local _ = [[
+	Handles the dummy in workspace so they can sponge the 
+	damage.
+]]
+
+-- Constants
 local REGEN_DELAY = 3
 local DUMMY_NAME = "Dummy"
+
+-----------------------------------
+-- Module definition & state
+-----------------------------------
+
+local DummyService = {}
+
+-----------------------------------
+-- Helper modules
+-----------------------------------
 
 local function bind(model: Model)
 	local humanoid = model:FindFirstChildOfClass("Humanoid")
@@ -25,6 +41,10 @@ local function bind(model: Model)
 		end
 	end)
 end
+
+-----------------------------------
+-- Public modules
+-----------------------------------
 
 function DummyService.onStart()
 	for _, model in workspace.combat:GetChildren() do

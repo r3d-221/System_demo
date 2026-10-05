@@ -1,5 +1,12 @@
 --!strict
 
+-- Description
+local _ = [[
+	This module finds all humanoids that need to be damaged and applies the damage.
+	It relies on DamageCalculationService for the calculation and HitboxService for
+	the hitbox.
+]]
+
 -- Services
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")

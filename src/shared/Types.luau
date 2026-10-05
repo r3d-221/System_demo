@@ -1,4 +1,9 @@
 --!strict
+
+local _ = [[
+	All types are stored in here accept for exclusive types.	
+]]
+
 local Types = {}
 
 export type Roll = {

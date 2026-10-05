@@ -1,5 +1,12 @@
 --!strict
 
+-- Description
+local _ = [[
+	Spawns collectable drops when killing enemies.
+	Only owner can collect for the first few seconds and 
+	then it becomes public.
+]]
+
 -- Services
 local CollectionService = game:GetService("CollectionService")
 local Debris = game:GetService("Debris")
@@ -27,7 +34,15 @@ local DROP_TAG = "drop"
 local DROP_LIFETIME = 60
 local PUBLIC_AFTER = 15
 
+-----------------------------------
+-- Module definition & state
+-----------------------------------
+
 local DropService = {}
+
+-----------------------------------
+-- Helper functions
+-----------------------------------
 
 local function spawn(position: Vector3, id: string, category: Category, amount: number, userId: number?)
 	local folder = templateFolders[category]
@@ -63,6 +78,10 @@ local function spawn(position: Vector3, id: string, category: Category, amount: 
 
 	Debris:AddItem(drop, DROP_LIFETIME)
 end
+
+-----------------------------------
+-- Public functions
+-----------------------------------
 
 function DropService.spawnDrops(position: Vector3, drops: { [string]: DropEntry }, userId: number?)
 	for id, entry in drops do

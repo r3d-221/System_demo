@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Gets the timers from the animation keyframes and markers.
+]]
+
 -- Services
 local KeyframeSequenceProvider = game:GetService("KeyframeSequenceProvider")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

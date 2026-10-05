@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Creates the stats for the weapons and buffs the player with
+	temp or permanent stat boosts.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

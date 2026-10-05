@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	A simple signal module that works like a bindable event.	
+]]
+
 -----------------------------------
 -- Module definition & state
 -----------------------------------

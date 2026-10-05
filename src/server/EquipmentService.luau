@@ -1,14 +1,16 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles equipping and unequipping of the weapons. Does not
+	use the default roblox backpack.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- Dependencies
 local weapons = ReplicatedStorage.weapons
-
--- Types
-
--- Variables
 
 -- Constants
 local GRIP_LIMB_NAME = "Right Arm"

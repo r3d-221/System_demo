@@ -1,4 +1,11 @@
 --!strict
+
+-- Description
+local _ = [[
+	Handles the enemy hit effects and weapon effects for all clients.	
+]]
+
+-- Services
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

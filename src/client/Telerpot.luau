@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles the teleport pad UI for the client.
+]]
+
 -- Services
 local RunService = game:GetService("RunService")
 

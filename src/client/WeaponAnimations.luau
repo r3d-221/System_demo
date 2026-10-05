@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles the weapon animations for the client. Timing is matched
+	with the server.
+]]
+
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -23,6 +29,8 @@ local Attack = Remotes.Attack
 -- Types
 type WeaponInfo = Types.WeaponInfo
 type Phase = Types.CombatPhase
+type PlayerData = Types.PlayerData
+type StatNames = Types.StatNames
 
 -- Variables
 local humanoid: Humanoid? = nil
@@ -262,13 +270,14 @@ local function createTracks(info: WeaponInfo)
 end
 
 -- get the equipped weapon data from player
-local function getEquippedWeapon(data: any): (string?, WeaponInfo?)
+local function getEquippedWeapon(data: PlayerData): (string?, WeaponInfo?)
 	local uid = data.equipped and data.equipped.weapons
-	if not uid or not data.items or not data.items.weapons then
+	local weapons = data.items["weapons" :: Types.Category]
+	if not uid or not weapons then
 		return nil, nil
 	end
 
-	for _, item in data.items.weapons do
+	for _, item in weapons do
 		if item.uid == uid then
 			return item.id, ItemData.weapons[item.id]
 		end
@@ -282,7 +291,7 @@ local function refresh()
 		return
 	end
 
-	attackSpeed = if data.changedStats then data.changedStats.attackSpeed or 0 else 0
+	attackSpeed = if data.changedStats then data.changedStats["attackSpeed" :: StatNames] or 0 else 0
 
 	local id, info = getEquippedWeapon(data)
 	if id == weaponId then

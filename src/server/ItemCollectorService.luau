@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles cooldown and drops for item collectors.
+]]
+
 -- Services
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")

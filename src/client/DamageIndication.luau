@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles the damage indication UI for the entities.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")

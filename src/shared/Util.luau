@@ -1,3 +1,10 @@
+--!strict
+
+-- Description
+local _ = [[
+	Useful functions to have.	
+]]
+
 local Util = {}
 
 -- formats numbers and returns a string
@@ -56,8 +63,8 @@ function Util.checkHumanoid(character: Model?): (Humanoid?, BasePart?)
 end
 
 -- ui mapper
-function Util.mapUI(rootElement)
-	local map = {}
+function Util.mapUI(rootElement: Instance): { [string]: any }
+	local map: { [string]: any } = {}
 	map[rootElement.Name] = rootElement
 
 	local ignoreNames = {

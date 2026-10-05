@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles creating items. Every module will call this when
+	creating any item. Can insert the items to PlayerService.
+]]
+
 -- Services
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

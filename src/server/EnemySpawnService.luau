@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Spawns enemies in tagged parts. Handles cloning and respawning
+	as well.
+]]
+
 -- Services
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

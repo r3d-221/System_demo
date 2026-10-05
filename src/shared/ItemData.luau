@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Data for the items.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	Creates a hitbox. It can be static or move with the character.
+	Inspired by "KashTheKing" -- gitbub.
+]]
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")

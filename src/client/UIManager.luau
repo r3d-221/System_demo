@@ -1,20 +1,41 @@
+--!strict
+
+-- Description
+local _ = [[
+	Manages the toggling of UI.
+]]
+
+-- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+-- Dependencies
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local screenContainer = playerGui:WaitForChild("Screens")
+
 local Signal = require(ReplicatedStorage.Shared.Signal)
+
+-----------------------------------
+-- Module definition & state
+-----------------------------------
 
 local UIManager = {}
 
 UIManager.ScreenOpened = Signal.new()
 UIManager.ScreenClosed = Signal.new()
 
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
-local screenContainer = playerGui:WaitForChild("Screens")
+-----------------------------------
+-- Helper functions
+-----------------------------------
 
 local function getScreen(name: string)
 	return screenContainer:FindFirstChild(name)
 end
+
+-----------------------------------
+-- Public functions
+-----------------------------------
 
 function UIManager.toggle(name: string): boolean?
 	local screen = getScreen(name)

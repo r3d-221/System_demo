@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles all animations for the UI screens and buttons.	
+]]
+
 -- Services
 local TweenService = game:GetService("TweenService")
 

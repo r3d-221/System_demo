@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles enemy health bar UI.
+]]
+
 -- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")

@@ -1,4 +1,11 @@
 --!strict
+
+-- Description
+local _ = [[
+	Handles teleport pads and their cooldowns.
+]]
+
+-- Services
 local Players = game:GetService("Players")
 
 -- Constants

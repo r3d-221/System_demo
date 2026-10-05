@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Manages the animation of the health bar.
+]]
+
 -- Services
 local TweenService = game:GetService("TweenService")
 

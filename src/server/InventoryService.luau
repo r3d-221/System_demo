@@ -1,5 +1,10 @@
 --!strict
 
+-- Description
+local _ = [[
+	Handles equipping and unequipping and selling of the player inventory.
+	runs on remote events from the Inventory module.
+]]
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

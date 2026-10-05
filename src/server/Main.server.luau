@@ -1,3 +1,5 @@
+-- Simple module loader for the server
+
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Server = ServerScriptService.Server

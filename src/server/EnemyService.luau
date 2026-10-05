@@ -1,5 +1,11 @@
 --!strict
 
+-- Description
+local _ = [[
+	State machine for the enemies. Handles their movement, damage and
+	death. Calls drop service and combat service.
+]]
+
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

@@ -1,3 +1,5 @@
+-- Simple module loader for client
+
 local Players = game:GetService("Players")
 
 local player = Players.LocalPlayer

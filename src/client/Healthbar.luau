@@ -1,4 +1,11 @@
 --!strict
+
+-- Description
+local _ = [[
+	Handles the player health bar UI.
+]]
+
+-- Services
 local Players = game:GetService("Players")
 
 -- Dependencies
