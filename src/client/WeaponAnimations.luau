@@ -17,6 +17,7 @@ local PlayerScripts = player:WaitForChild("PlayerScripts")
 local Client = PlayerScripts.Client
 local HitEffects = require(Client.HitEffects)
 local PlayerManager = require(Client.PlayerManager)
+local Sounds = require(Client.Sounds)
 
 local Shared = ReplicatedStorage.Shared
 local ItemData = require(Shared.ItemData)
@@ -189,6 +190,7 @@ local function playSlash(index: number, name: string?, root: BasePart?, reach: n
 	end
 
 	HitEffects.playSlash(cframe, scale)
+	Sounds.new("slash")
 end
 
 -- sets up connection for the combo based on the markers in the animation
@@ -355,7 +357,6 @@ function WeaponAnimations.onStart()
 
 	-- sets animation for enemies
 	SwingStarted.OnClientEvent:Connect(function(model: Model?, index: number, name: string, reach: number?)
-		-- return if player since the animation already played
 		if not model or model == player.Character then
 			return
 		end

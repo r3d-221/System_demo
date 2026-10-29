@@ -19,6 +19,7 @@ local PlayerManager = require(Client.PlayerManager)
 local UIManager = require(Client.UIManager)
 local UIAnimations = require(Client.UIAnimations)
 local Inventory = require(Client.Inventory)
+local Sounds = require(Client.Sounds)
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Util = require(Shared.Util)
@@ -100,6 +101,7 @@ local function setUpButtons()
 		end
 
 		updateButtonColors()
+		Sounds.new("click")
 	end)
 end
 

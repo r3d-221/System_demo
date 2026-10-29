@@ -52,9 +52,9 @@ local function bind(billboard: BillboardGui)
 	end)
 end
 
-local function consider(inst: Instance)
-	if BILLBOARD_NAMES[inst.Name] and inst:IsA("BillboardGui") then
-		task.spawn(bind, inst)
+local function consider(instance: Instance)
+	if BILLBOARD_NAMES[instance.Name] and instance:IsA("BillboardGui") then
+		task.spawn(bind, instance)
 	end
 end
 

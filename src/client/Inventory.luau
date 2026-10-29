@@ -18,6 +18,7 @@ local Client = PlayerScripts.Client
 local PlayerManager = require(Client.PlayerManager)
 local UIManager = require(Client.UIManager)
 local UIAnimations = require(Client.UIAnimations)
+local Sounds = require(Client.Sounds)
 
 local Shared = ReplicatedStorage.Shared
 local ItemData = require(Shared.ItemData)
@@ -285,6 +286,7 @@ local function createInventorySlot(item: Item, parent: Instance?): Frame?
 			setSelectedSlot(slot)
 			currentItem = item
 			Inventory.updateInfo()
+			Sounds.new("click")
 		end)
 	end
 
@@ -372,6 +374,7 @@ local function setUpButtons()
 		Inventory.closeInfo()
 
 		Inventory.ScreenClosed:Fire()
+		Sounds.new("click")
 	end)
 
 	for _, name in TAB_KEYS do
@@ -387,6 +390,7 @@ local function setUpButtons()
 			button.MouseButton1Click:Connect(function()
 				UIAnimations.popOut(tab)
 				switchTab(name :: Tab)
+				Sounds.new("click")
 			end)
 		end
 	end
@@ -407,6 +411,7 @@ local function setUpButtons()
 				end
 				UIAnimations.popOut(info)
 				switchInfoTab(name :: InfoTab)
+				Sounds.new("click")
 			end)
 		end
 	end
@@ -422,6 +427,7 @@ local function setUpButtons()
 		filterButton.MouseButton1Click:Connect(function()
 			UIAnimations.popOut(map.filter)
 			Inventory.toggleFilterPanel()
+			Sounds.new("click")
 		end)
 	end
 
@@ -436,6 +442,7 @@ local function setUpButtons()
 		filterCloseButton.MouseButton1Click:Connect(function()
 			UIAnimations.popOut(map.filter_close)
 			Inventory.closeFilterPanel()
+			Sounds.new("click")
 		end)
 	end
 
@@ -450,6 +457,7 @@ local function setUpButtons()
 		applyButton.MouseButton1Click:Connect(function()
 			UIAnimations.popOut(map.filter_apply)
 			Inventory.applyPendingFilters()
+			Sounds.new("click")
 		end)
 	end
 
@@ -464,6 +472,7 @@ local function setUpButtons()
 		resetButton.MouseButton1Click:Connect(function()
 			UIAnimations.popOut(map.filter_reset)
 			Inventory.resetFilters()
+			Sounds.new("click")
 		end)
 	end
 
@@ -506,6 +515,7 @@ local function setUpButtons()
 		unequipButton.MouseButton1Click:Connect(function()
 			UIAnimations.popOut(map.unequip)
 			unequipCurrentItem()
+			Sounds.new("click")
 		end)
 	end
 
@@ -520,6 +530,7 @@ local function setUpButtons()
 		sellButton.MouseButton1Click:Connect(function()
 			UIAnimations.popOut(map.sell)
 			sellCurrentItem()
+			Sounds.new("click")
 		end)
 	end
 end
@@ -604,6 +615,7 @@ local function createFilterSlot(category: FilterCategory, value: string, name: s
 			local isSelected = not pendingFilters[category][value]
 			pendingFilters[category][value] = isSelected or nil
 			toggleFilterSlot(filterSlot, isSelected)
+			Sounds.new("click")
 		end)
 	end
 
