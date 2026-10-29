@@ -9,3 +9,4 @@ Promise = "evaera/promise@4.0.0"
 Janitor = "howmanysmall/janitor@1.18.3"
 
 [server-dependencies]
+Profilestore = "lm-loleris/profilestore@1.0.3"

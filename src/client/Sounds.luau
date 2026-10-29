@@ -28,10 +28,6 @@ local list: { [string]: Sound } = {}
 -----------------------------------
 
 function Sounds.new(id: string)
-	if list[id] then
-		Sounds.destroy(id)
-	end
-
 	local template = sounds_template:FindFirstChild(id) :: Sound
 	if not template then
 		return
@@ -43,19 +39,10 @@ function Sounds.new(id: string)
 
 	clone.Ended:Once(function()
 		clone:Destroy()
+		list[id] = nil
 	end)
 
 	clone:Play()
-end
-
-function Sounds.destroy(id: string)
-	local sound = list[id]
-	if sound.IsPlaying then
-		sound:Stop()
-	end
-
-	sound:Destroy()
-	list[id] = nil
 end
 
 return Sounds

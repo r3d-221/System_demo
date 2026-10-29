@@ -2,8 +2,7 @@
 
 -- Description
 local _ = [[
-	Handles player data. Doesn't save the data per session since it's
-	excessive for a demo.
+	Handles player data. Uses profile store to save the data.
 ]]
 
 -- Services
@@ -16,6 +15,7 @@ local Remotes = ReplicatedStorage.Remotes
 local SyncData = Remotes.SyncData
 
 local StatsService = require(ServerScriptService.Server.StatsService)
+local Profilestore = require(ServerScriptService.ServerPackages.Profilestore)
 local Types = require(ReplicatedStorage.Shared.Types)
 
 -- Types
@@ -23,15 +23,13 @@ type Item = Types.Item
 type PlayerData = Types.PlayerData
 type Category = Types.Category
 
+-- Constants
+local KEY = "test 1.1"
+
 -----------------------------------
 -- Module definition & state
 -----------------------------------
 local PlayerService = {}
-local playerData = {}
-
------------------------------------
--- Helper functions
------------------------------------
 
 local function defaultData(): PlayerData
 	local data: PlayerData = {
@@ -59,19 +57,39 @@ local function defaultData(): PlayerData
 	return data
 end
 
-local function setUpData(player: Player)
-	if playerData[player] then
+local store = Profilestore.New(KEY, defaultData())
+local profiles = {}
+
+-----------------------------------
+-- Helper functions
+-----------------------------------
+
+local function onPlayerAdded(player: Player)
+	local profile = store:StartSessionAsync("Player_" .. player.UserId, {
+		Cancel = function()
+			return not player:IsDescendantOf(Players)
+		end,
+	})
+
+	if not profile then
+		player:Kick("Failed to load player data!")
 		return
 	end
 
-	local data = defaultData()
-	playerData[player] = data
-	SyncData:FireClient(player, data)
+	profile:AddUserId(player.UserId)
+	profiles[player] = profile
+	profile:Reconcile()
+
+	StatsService.recalculate(profile.Data)
+	PlayerService.sync(player)
 end
 
-local function clearData(player: Player)
-	playerData[player] = nil
-	-- print("[PlayerService] Data cleaned up for: " .. player.Name)
+local function onPlayerRemoved(player: Player)
+	local profile = profiles[player]
+	if profile then
+		profile:EndSession()
+		profiles[player] = nil
+	end
 end
 
 -----------------------------------
@@ -79,60 +97,24 @@ end
 -----------------------------------
 
 function PlayerService.onStart()
-	for _, player in Players:GetPlayers() do
-		task.spawn(setUpData, player)
-	end
+	Players.PlayerAdded:Connect(onPlayerAdded)
+	Players.PlayerRemoving:Connect(onPlayerRemoved)
 
-	Players.PlayerAdded:Connect(setUpData)
-	Players.PlayerRemoving:Connect(clearData)
+	for _, player in Players:GetPlayers() do
+		task.spawn(onPlayerAdded, player)
+	end
 end
 
 function PlayerService.getData(player: Player): PlayerData?
-	local data = playerData[player]
-	if not data then
-		warn("[PlayerService] No data found for: " .. player.Name)
-	end
-	return data
+	local profile = profiles[player]
+	return profile and profile.Data
 end
 
 function PlayerService.sync(player: Player)
-	local data = playerData[player]
+	local data = PlayerService.getData(player)
 	if data then
 		SyncData:FireClient(player, data)
 	end
-end
-
-function PlayerService.addItem(player: Player, item: Item, category: Category)
-	local data = PlayerService.getData(player)
-	if not data then
-		return
-	end
-
-	local categoryList = data.items[category]
-	if not categoryList then
-		warn("[PlayerService] Attempted to add item to invalid category: " .. tostring(category))
-		return
-	end
-
-	if category == "materials" then
-		local existing
-		for _, existingItem in categoryList do
-			if existingItem.id == item.id then
-				existing = existingItem
-				break
-			end
-		end
-
-		if existing then
-			existing.amount = (existing.amount or 0) + (item.amount or 1)
-		else
-			table.insert(categoryList, item)
-		end
-	else
-		table.insert(categoryList, item)
-	end
-
-	SyncData:FireClient(player, data)
 end
 
 return PlayerService

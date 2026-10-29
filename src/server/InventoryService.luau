@@ -171,7 +171,7 @@ function InventoryService.addItem(player: Player, item: Item, category: Category
 
 	local categoryList = data.items[category]
 	if not categoryList then
-		warn("[PlayerService] Attempted to add item to invalid category: " .. tostring(category))
+		warn("[InventoryService] Attempted to add item to invalid category: " .. tostring(category))
 		return
 	end
 
@@ -193,6 +193,7 @@ function InventoryService.addItem(player: Player, item: Item, category: Category
 		table.insert(categoryList, item)
 	end
 
+	print(data)
 	SyncData:FireClient(player, data)
 end
 
